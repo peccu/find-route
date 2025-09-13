@@ -20,7 +20,7 @@
 import { ref, watch } from 'vue';
 import RouteManager from '../components/RouteManager.vue'
 import { loadRoutes, saveRoutes, clearRoutes } from '../services/storage'
-import type { Route } from './types'
+import type { Route } from '../types'
 
 export default {
   components: { RouteManager },

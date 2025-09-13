@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
-import type { Route, RouteResult, Event, Leg } from '../types'
+import type { Route, RouteResult, Event } from '../types'
 import { hhmmToMinutes, minutesToHHMM, getCurrentTime } from '../utils'
 
 export default defineComponent({

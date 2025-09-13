@@ -11,18 +11,21 @@
 </template>
 
 <script lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import RoutesPage from './pages/RoutesPage.vue';
 import ManagePage from './pages/ManagePage.vue';
-import { loadRoutes, saveRoutes, clearRoutes } from './services/storage'
+import { loadRoutes } from './services/storage'
+import type { Route } from './types'
+
+type Pages = 'routes' | 'manage';
 
 export default {
   components: {RoutesPage, ManagePage},
   setup() {
-    const currentPage = ref<'routes' | 'manage'>('routes');
+    const currentPage = ref<Pages>('routes');
     const routes = ref<Route[]>(loadRoutes())
 
-    function changePage(to) {
+    function changePage(to: Pages) {
       currentPage.value = to;
       routes.value = loadRoutes();
     }
