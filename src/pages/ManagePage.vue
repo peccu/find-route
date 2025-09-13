@@ -1,0 +1,68 @@
+<template>
+  <div class="space-y-4">
+    <RouteManager v-model:routes="routes" />
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="font-medium mb-2">バックアップ / リストア</h2>
+      <div class="flex gap-2">
+        <button @click="downloadBackup" class="px-3 py-2 bg-blue-600 text-white rounded">JSONダウンロード</button>
+        <label class="px-3 py-2 bg-gray-200 rounded cursor-pointer">
+          JSONアップロード
+          <input type="file" accept="application/json" @change="onFileUpload" class="hidden" />
+        </label>
+        <button @click="resetAll" class="px-3 py-2 bg-red-500 text-white rounded">全削除</button>
+      </div>
+    </div>
+    <p class="mt-6 text-sm text-gray-500">メモ: データはローカルストレージに保存されます。</p>
+  </div>
+</template>
+
+<script lang="ts">
+import { ref, watch } from 'vue';
+import RouteManager from '../components/RouteManager.vue'
+import { loadRoutes, saveRoutes, clearRoutes } from '../services/storage'
+import type { Route } from './types'
+
+export default {
+  components: { RouteManager },
+  setup() {
+    const routes = ref<Route[]>(loadRoutes())
+
+    watch(routes, (r) => saveRoutes(r), { deep: true })
+
+    function downloadBackup() {
+      const blob = new Blob([JSON.stringify(routes.value, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'routes_backup.json'
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+
+    async function onFileUpload(e: Event) {
+      const el = e.target as HTMLInputElement
+      const f = el.files?.[0]
+      if (!f) return
+      try {
+        const txt = await f.text()
+        const parsed = JSON.parse(txt)
+        if (!Array.isArray(parsed)) throw new Error('invalid')
+        routes.value = parsed
+        alert('リストア完了')
+      } catch {
+        alert('不正なJSONです')
+      } finally {
+        el.value = ''
+      }
+    }
+
+    function resetAll() {
+      if (!confirm('全てのルートを削除します。よろしいですか？')) return
+      routes.value = []
+      clearRoutes()
+    }
+
+    return { routes, downloadBackup, onFileUpload, resetAll }
+  }
+}
+</script>

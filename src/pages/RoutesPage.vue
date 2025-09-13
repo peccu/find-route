@@ -4,7 +4,7 @@
 
     <div class="mb-3">
       <label class="block text-sm">出発時刻 (HH:MM)</label>
-      <input v-model="startInput" class="border rounded p-2 w-32" />
+      <input v-model="departureTime" class="border rounded p-2 w-32" />
       <button @click="run" class="ml-2 px-3 py-1 bg-blue-600 text-white rounded">シミュレート</button>
     </div>
 
@@ -39,7 +39,7 @@ export default defineComponent({
     routes: { type: Array as () => Route[], required: true }
   },
   setup(props) {
-    const startInput = ref('08:00')
+    const departureTime = ref('08:00')
     const results = ref<RouteResult[]>([])
 
     watch(() => props.routes, () => {
@@ -50,7 +50,7 @@ export default defineComponent({
     function format(mins:number){ return minutesToHHMM(mins) }
 
     function run() {
-      const start = hhmmToMinutes(startInput.value)
+      const start = hhmmToMinutes(departureTime.value)
       if (start === null) { alert('出発時刻をHH:MM形式で入力してください'); return }
       const res: RouteResult[] = []
       for (const r of props.routes) {
@@ -97,7 +97,7 @@ export default defineComponent({
       return { routeId: route.id, routeName: route.name, arrivalTime: currentTime, events }
     }
 
-    return { startInput, run, results, format }
+    return { departureTime, run, results, format }
   }
 })
 </script>
