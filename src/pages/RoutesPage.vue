@@ -32,14 +32,14 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
 import type { Route, RouteResult, Event, Leg } from '../types'
-import { hhmmToMinutes, minutesToHHMM } from '../utils'
+import { hhmmToMinutes, minutesToHHMM, getCurrentTime } from '../utils'
 
 export default defineComponent({
   props: {
     routes: { type: Array as () => Route[], required: true }
   },
   setup(props) {
-    const departureTime = ref('08:00')
+    const departureTime = ref(getCurrentTime());
     const results = ref<RouteResult[]>([])
 
     watch(() => props.routes, () => {

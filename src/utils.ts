@@ -28,3 +28,10 @@ export function parseTimetableString(s: string): number[] {
 export function uid(prefix = ''): string {
   return prefix + Math.random().toString(36).slice(2, 9);
 }
+
+export function getCurrentTime(): string {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
