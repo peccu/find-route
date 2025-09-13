@@ -1,30 +1,78 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-2xl font-semibold mb-4">経路シミュレーター</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-4">
+        <RouteManager v-model:routes="routes" />
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="font-medium mb-2">バックアップ / リストア</h2>
+          <div class="flex gap-2">
+            <button @click="downloadBackup" class="px-3 py-2 bg-blue-600 text-white rounded">JSONダウンロード</button>
+            <label class="px-3 py-2 bg-gray-200 rounded cursor-pointer">
+              JSONアップロード
+              <input type="file" accept="application/json" @change="onFileUpload" class="hidden" />
+            </label>
+            <button @click="resetAll" class="px-3 py-2 bg-red-500 text-white rounded">全削除</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <Simulator :routes="routes" />
+      </div>
+    </div>
+    <p class="mt-6 text-sm text-gray-500">メモ: データはローカルストレージに保存されます。</p>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script lang="ts">
+import { ref, watch } from 'vue'
+import RouteManager from './components/RouteManager.vue'
+import Simulator from './components/Simulator.vue'
+import { loadRoutes, saveRoutes, clearRoutes } from './services/storage'
+import type { Route } from './types'
+
+export default {
+  components: { RouteManager, Simulator },
+  setup() {
+    const routes = ref<Route[]>(loadRoutes())
+
+    watch(routes, (r) => saveRoutes(r), { deep: true })
+
+    function downloadBackup() {
+      const blob = new Blob([JSON.stringify(routes.value, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'routes_backup.json'
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+
+    async function onFileUpload(e: Event) {
+      const el = e.target as HTMLInputElement
+      const f = el.files?.[0]
+      if (!f) return
+      try {
+        const txt = await f.text()
+        const parsed = JSON.parse(txt)
+        if (!Array.isArray(parsed)) throw new Error('invalid')
+        routes.value = parsed
+        alert('リストア完了')
+      } catch {
+        alert('不正なJSONです')
+      } finally {
+        el.value = ''
+      }
+    }
+
+    function resetAll() {
+      if (!confirm('全てのルートを削除します。よろしいですか？')) return
+      routes.value = []
+      clearRoutes()
+    }
+
+    return { routes, downloadBackup, onFileUpload, resetAll }
+  }
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+</script>

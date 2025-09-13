@@ -1,0 +1,39 @@
+export type WalkLeg = {
+  id: string;
+  type: 'walk';
+  durationMinutes: number;
+};
+
+export type TrainLeg = {
+  id: string;
+  type: 'train';
+  line: string;
+  from: string;
+  to: string;
+  // timetable: minutes since 00:00
+  timetable: number[]; 
+  durationMinutes: number;
+};
+
+export type Leg = WalkLeg | TrainLeg;
+
+export type Route = {
+  id: string;
+  name: string;
+  legs: Leg[];
+  notes?: string;
+};
+
+export type Event = {
+  legId: string;
+  legType: 'walk' | 'train';
+  departure: number; // minutes since 00:00 (can exceed 1440)
+  arrival: number;
+};
+
+export type RouteResult = {
+  routeId: string;
+  routeName: string;
+  arrivalTime: number;
+  events: Event[];
+};
