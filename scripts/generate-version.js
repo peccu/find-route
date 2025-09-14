@@ -1,6 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+const fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+// ES Modulesでは、CommonJSの__dirname, __filenameが使えないため、
+// 代わりにimport.meta.urlとurlモジュールを使用する
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 try {
   // Gitの最新コミットハッシュを取得
