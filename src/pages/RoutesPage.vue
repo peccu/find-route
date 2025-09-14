@@ -5,7 +5,7 @@
     <div class="mb-3">
       <label class="block text-sm">出発時刻 (HH:MM)</label>
       <input v-model="departureTime" class="border rounded p-2 w-32" />
-      <button @click="run" class="ml-2 px-3 py-1 bg-blue-600 text-white rounded">シミュレート</button>
+      <button @click="run" class="ml-2 px-3 py-1 bg-blue-600 text-white rounded cursor-pointer">シミュレート</button>
     </div>
 
     <div v-if="results.length === 0" class="text-sm text-gray-500">シミュレーション結果がありません。</div>
