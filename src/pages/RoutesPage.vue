@@ -21,8 +21,8 @@
 
       <div class="mt-2 text-sm">
         <div v-for="ev in res.events" :key="ev.legId" class="py-1">
-          <div v-if="ev.legType === 'walk'">徒歩: {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
-          <div v-else>電車: {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
+          <div v-if="ev.legType === 'walk'">徒歩 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
+          <div v-else>電車 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ export default defineComponent({
         if (leg.type === 'walk') {
           const departure = currentTime
           const arrival = currentTime + leg.durationMinutes
-          events.push({ legId: leg.id, legType: 'walk', departure, arrival })
+          events.push({ legId: leg.id, legType: 'walk', departure, durationMinutes: leg.durationMinutes, arrival })
           currentTime = arrival
         } else {
           // find first timetable departure >= currentTime
@@ -80,7 +80,7 @@ export default defineComponent({
             const next = leg.timetable[0] + 24*60
             const departure = next + Math.floor(currentTime/(24*60))*24*60
             const arrival = departure + leg.durationMinutes
-            events.push({ legId: leg.id, legType: 'train', departure, arrival })
+            events.push({ legId: leg.id, legType: 'train', departure, durationMinutes: leg.durationMinutes, arrival })
             currentTime = arrival
           } else {
             // t is in same-day minutes; but if currentTime already past midnight offset, align days
@@ -88,7 +88,7 @@ export default defineComponent({
             let departure = baseDayOffset + t
             if (departure < currentTime) departure += 24*60
             const arrival = departure + leg.durationMinutes
-            events.push({ legId: leg.id, legType: 'train', departure, arrival })
+            events.push({ legId: leg.id, legType: 'train', departure, durationMinutes: leg.durationMinutes, arrival })
             currentTime = arrival
           }
         }

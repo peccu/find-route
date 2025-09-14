@@ -28,6 +28,7 @@ export type Event = {
   legId: string;
   legType: 'walk' | 'train';
   departure: number; // minutes since 00:00 (can exceed 1440)
+  durationMinutes: number;
   arrival: number;
 };
 
