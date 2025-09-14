@@ -10,8 +10,8 @@
           <div class="text-sm text-gray-600">{{ r.legs.length }}区間 · {{ r.notes ?? '' }}</div>
         </div>
         <div class="flex gap-2">
-          <button @click="editRoute(r)" class="px-2 py-1 bg-yellow-300 rounded">編集</button>
-          <button @click="removeRoute(r.id)" class="px-2 py-1 bg-red-400 text-white rounded">削除</button>
+          <button @click="editRoute(r)" class="px-2 py-1 bg-yellow-300 rounded cursor-pointer">編集</button>
+          <button @click="removeRoute(r.id)" class="px-2 py-1 bg-red-400 text-white rounded cursor-pointer">削除</button>
         </div>
       </div>
     </div>

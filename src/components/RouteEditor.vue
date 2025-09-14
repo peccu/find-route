@@ -17,9 +17,9 @@
           <div class="flex justify-between items-center mb-2">
             <div class="text-sm font-semibold">#{{ idx + 1 }} - {{ leg.type }}</div>
             <div class="flex gap-2">
-              <button type="button" @click="moveUp(idx)" :disabled="idx===0" class="px-2 py-1 bg-gray-200 rounded">↑</button>
-              <button type="button" @click="moveDown(idx)" :disabled="idx===form.legs.length-1" class="px-2 py-1 bg-gray-200 rounded">↓</button>
-              <button type="button" @click="removeLeg(idx)" class="px-2 py-1 bg-red-300 rounded">削除</button>
+              <button type="button" @click="moveUp(idx)" :disabled="idx===0" class="px-2 py-1 bg-gray-200 rounded cursor-pointer">↑</button>
+              <button type="button" @click="moveDown(idx)" :disabled="idx===form.legs.length-1" class="px-2 py-1 bg-gray-200 rounded cursor-pointer">↓</button>
+              <button type="button" @click="removeLeg(idx)" class="px-2 py-1 bg-red-300 rounded cursor-pointer">削除</button>
             </div>
           </div>
 
@@ -53,14 +53,14 @@
         </div>
 
         <div class="flex gap-2 mt-2">
-          <button type="button" @click="addWalk" class="px-3 py-1 bg-green-400 rounded">徒歩区間を追加</button>
-          <button type="button" @click="addTrain" class="px-3 py-1 bg-indigo-400 text-white rounded">電車区間を追加</button>
+          <button type="button" @click="addWalk" class="px-3 py-1 bg-green-400 rounded cursor-pointer">徒歩区間を追加</button>
+          <button type="button" @click="addTrain" class="px-3 py-1 bg-indigo-400 text-white rounded cursor-pointer">電車/バス区間を追加</button>
         </div>
       </div>
 
       <div class="flex gap-2">
-        <button class="px-3 py-2 bg-blue-600 text-white rounded">保存</button>
-        <button type="button" @click="$emit('cancel')" class="px-3 py-2 bg-gray-200 rounded">キャンセル</button>
+        <button class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer">保存</button>
+        <button type="button" @click="$emit('cancel')" class="px-3 py-2 bg-gray-200 rounded cursor-pointer">キャンセル</button>
       </div>
     </form>
   </div>

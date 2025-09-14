@@ -4,12 +4,12 @@
     <div class="bg-white p-4 rounded shadow">
       <h2 class="font-medium mb-2">バックアップ / リストア</h2>
       <div class="flex gap-2">
-        <button @click="downloadBackup" class="px-3 py-2 bg-blue-600 text-white rounded">JSONダウンロード</button>
+        <button @click="downloadBackup" class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer">エクスポート</button>
         <label class="px-3 py-2 bg-gray-200 rounded cursor-pointer">
-          JSONアップロード
+          インポート
           <input type="file" accept="application/json" @change="onFileUpload" class="hidden" />
         </label>
-        <button @click="resetAll" class="px-3 py-2 bg-red-500 text-white rounded">全削除</button>
+        <button @click="resetAll" class="px-3 py-2 bg-red-500 text-white rounded cursor-pointer">全削除</button>
       </div>
     </div>
     <p class="mt-6 text-sm text-gray-500">メモ: データはローカルストレージに保存されます。</p>
