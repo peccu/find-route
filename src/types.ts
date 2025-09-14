@@ -38,7 +38,7 @@ export type Event = {
 export type RouteResult = {
   routeId: string;
   routeName: string;
-  routeNote: string;
+  routeNote?: string;
   arrivalTime: number;
   events: Event[];
 };
