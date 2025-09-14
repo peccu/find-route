@@ -16,8 +16,14 @@ import RoutesPage from './pages/RoutesPage.vue';
 import ManagePage from './pages/ManagePage.vue';
 import { loadRoutes } from './services/storage'
 import type { Route } from './types'
+import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { checkAndUpdateVersion } from './services/version-checker';
+
 
 type Pages = 'routes' | 'manage';
+
+// 更新を検知した場合に、ユーザーに通知するカスタムイベント
+const updateEvent = new CustomEvent('app-update-available');
 
 export default {
   components: {RoutesPage, ManagePage},
@@ -29,6 +35,33 @@ export default {
       currentPage.value = to;
       routes.value = loadRoutes();
     }
+
+    let intervalId: number | null = null;
+
+    const startUpdateChecker = () => {
+      intervalId = setInterval(async () => {
+        const hasUpdate = await checkAndUpdateVersion();
+        if (hasUpdate) {
+          // 更新があった場合、カスタムイベントを発火
+          window.dispatchEvent(updateEvent);
+          // ユーザーに通知してリロードを促す
+          const confirmed = confirm('新しいバージョンが利用可能です。ページをリロードしますか？');
+          if (confirmed) {
+            window.location.reload();
+          }
+        }
+      }, 60000); // 1分ごとにチェック (調整可能)
+    };
+
+    onMounted(() => {
+      startUpdateChecker();
+    });
+
+    onUnmounted(() => {
+      if (intervalId !== null) {
+        clearInterval(intervalId);
+      }
+    });
 
     return { currentPage, changePage, routes }
   }
