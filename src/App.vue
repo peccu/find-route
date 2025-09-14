@@ -16,7 +16,7 @@ import RoutesPage from './pages/RoutesPage.vue';
 import ManagePage from './pages/ManagePage.vue';
 import { loadRoutes } from './services/storage'
 import type { Route } from './types'
-import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { checkAndUpdateVersion } from './services/version-checker';
 
 
