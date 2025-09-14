@@ -21,6 +21,7 @@ import { ref, watch } from 'vue';
 import RouteManager from '../components/RouteManager.vue'
 import { loadRoutes, saveRoutes, clearRoutes } from '../services/storage'
 import type { Route } from '../types'
+import { getFormattedDateTime } from '../utils'
 
 export default {
   components: { RouteManager },
@@ -34,7 +35,7 @@ export default {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'routes_backup.json'
+      a.download = `find_route_backup_${getFormattedDateTime()}.json`
       a.click()
       URL.revokeObjectURL(url)
     }
