@@ -11,7 +11,7 @@ export type TrainLeg = {
   from: string;
   to: string;
   // timetable: minutes since 00:00
-  timetable: number[]; 
+  timetable: number[];
   durationMinutes: number;
 };
 
@@ -27,6 +27,9 @@ export type Route = {
 export type Event = {
   legId: string;
   legType: 'walk' | 'train';
+  legLine?: string;
+  legFrom?: string;
+  legTo?: string;
   departure: number; // minutes since 00:00 (can exceed 1440)
   durationMinutes: number;
   arrival: number;
@@ -35,6 +38,7 @@ export type Event = {
 export type RouteResult = {
   routeId: string;
   routeName: string;
+  routeNote: string;
   arrivalTime: number;
   events: Event[];
 };

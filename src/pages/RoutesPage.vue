@@ -13,8 +13,8 @@
     <div v-for="res in results" :key="res.routeId" class="border rounded p-3 mb-2">
       <div class="flex justify-between items-center">
         <div>
-          <div class="font-semibold">{{ res.routeName }}</div>
-          <div class="text-sm text-gray-600">到着: {{ format(res.arrivalTime) }}</div>
+          <div class="font-semibold">{{ format(res.arrivalTime) }}到着 : {{ res.routeName }}</div>
+          <div class="text-sm text-gray-600">{{ res.routeNote }}</div>
         </div>
         <div class="text-sm text-gray-500">{{ res.events.length }} events</div>
       </div>
@@ -22,7 +22,7 @@
       <div class="mt-2 text-sm">
         <div v-for="ev in res.events" :key="ev.legId" class="py-1">
           <div v-if="ev.legType === 'walk'">徒歩 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
-          <div v-else>電車 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
+          <div v-else>電車 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }} ({{ ev.legFrom }} - {{ ev.legLine }} - {{ ev.legTo }})</div>
         </div>
       </div>
     </div>
@@ -80,7 +80,16 @@ export default defineComponent({
             const next = leg.timetable[0] + 24*60
             const departure = next + Math.floor(currentTime/(24*60))*24*60
             const arrival = departure + leg.durationMinutes
-            events.push({ legId: leg.id, legType: 'train', departure, durationMinutes: leg.durationMinutes, arrival })
+            events.push({
+              legId: leg.id,
+              legType: 'train',
+              legLine: leg.line,
+              legFrom: leg.from,
+              legTo: leg.to,
+              departure,
+              durationMinutes: leg.durationMinutes,
+              arrival
+            })
             currentTime = arrival
           } else {
             // t is in same-day minutes; but if currentTime already past midnight offset, align days
@@ -88,13 +97,22 @@ export default defineComponent({
             let departure = baseDayOffset + t
             if (departure < currentTime) departure += 24*60
             const arrival = departure + leg.durationMinutes
-            events.push({ legId: leg.id, legType: 'train', departure, durationMinutes: leg.durationMinutes, arrival })
+            events.push({
+              legId: leg.id,
+              legType: 'train',
+              legLine: leg.line,
+              legFrom: leg.from,
+              legTo: leg.to,
+              departure,
+              durationMinutes: leg.durationMinutes,
+              arrival
+            })
             currentTime = arrival
           }
         }
       }
 
-      return { routeId: route.id, routeName: route.name, arrivalTime: currentTime, events }
+      return { routeId: route.id, routeName: route.name, routeNote: route.notes, arrivalTime: currentTime, events }
     }
 
     return { departureTime, run, results, format }
