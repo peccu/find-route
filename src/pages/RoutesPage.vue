@@ -22,7 +22,14 @@
       <div class="mt-2 text-sm">
         <div v-for="ev in res.events" :key="ev.legId" class="py-1">
           <div v-if="ev.legType === 'walk'">徒歩 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
-          <div v-else>電車 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }} ({{ ev.legFrom }} - {{ ev.legLine }} - {{ ev.legTo }})</div>
+          <div v-else>
+            <div>
+              電車 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}
+            </div>
+            <div>
+              {{ ev.legLine }} ({{ ev.legFrom }} → {{ ev.legTo }})
+            </div>
+          </div>
         </div>
       </div>
     </div>
