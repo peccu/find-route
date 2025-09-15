@@ -49,7 +49,7 @@
               <label class="text-sm block">参考URL (時刻表URLなど)</label>
               <div class="flex gap-2">
                 <input v-model="(leg as any).url" class="border rounded p-1 w-full" />
-                <button type="button" @click="copy(idx)" :disabled="!(leg as any).url" class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer flex-shrink-0 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50">Copy</button>
+                <button type="button" @click="open(idx)" :disabled="!(leg as any).url" class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer flex-shrink-0 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50">Open</button>
               </div>
             </div>
             <div class="mt-2">
@@ -77,7 +77,7 @@
 import { defineComponent, reactive, toRaw } from 'vue'
 import type { Route, Leg } from '../types'
 import { uid } from '../utils'
-import { copyToClipboard, parseTimetableString } from '../utils'
+import { parseTimetableString } from '../utils'
 
 export default defineComponent({
   props: {
@@ -108,16 +108,11 @@ export default defineComponent({
       timetableInputs.push('')
     }
 
-    const copy = async (idx:number) =>  {
+    const open = async (idx:number) =>  {
       if (form.legs[idx].type == 'walk' || !form.legs[idx].url){
         return;
       }
-      const result = await copyToClipboard(form.legs[idx].url);
-      if (result) {
-        alert('Copy succeeded');
-      }else{
-        alert('Copy failed');
-      }
+      window.open(form.legs[idx].url);
     }
 
     function removeLeg(idx:number) {
@@ -139,7 +134,7 @@ export default defineComponent({
       emit('save', JSON.parse(JSON.stringify(toRaw(form))))
     }
 
-    return { copy, form, addWalk, addTrain, removeLeg, moveUp, moveDown, onSave, timetableInputs }
+    return { open, form, addWalk, addTrain, removeLeg, moveUp, moveDown, onSave, timetableInputs }
   }
 })
 </script>
