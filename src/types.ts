@@ -13,6 +13,7 @@ export type TrainLeg = {
   // timetable: minutes since 00:00
   timetable: number[];
   durationMinutes: number;
+  url?: string;
 };
 
 export type Leg = WalkLeg | TrainLeg;

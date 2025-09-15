@@ -46,6 +46,10 @@
               <input v-model="timetableInputs[idx]" class="border rounded p-1 w-full" />
             </div>
             <div class="mt-2">
+              <label class="text-sm block">参考URL (時刻表URLなど)</label>
+              <input v-model="(leg as any).url" class="border rounded p-1 w-full" />
+            </div>
+            <div class="mt-2">
               <label class="text-sm block">乗車時間（分）</label>
               <input type="number" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
             </div>
@@ -97,7 +101,7 @@ export default defineComponent({
       timetableInputs.push('')
     }
     function addTrain() {
-      form.legs.push({ id: uid('leg_'), type: 'train', line: '', from: '', to: '', timetable: [], durationMinutes: 10 } as Leg)
+      form.legs.push({ id: uid('leg_'), type: 'train', line: '', from: '', to: '', timetable: [], url: '', durationMinutes: 10 } as Leg)
       timetableInputs.push('')
     }
 
