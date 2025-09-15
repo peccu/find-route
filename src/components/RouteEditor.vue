@@ -17,8 +17,8 @@
           <div class="flex justify-between items-center mb-2">
             <div class="text-sm font-semibold">#{{ idx + 1 }} - {{ leg.type }}</div>
             <div class="flex gap-2">
-              <button type="button" @click="moveUp(idx)" :disabled="idx===0" class="px-2 py-1 bg-gray-200 rounded cursor-pointer">↑</button>
-              <button type="button" @click="moveDown(idx)" :disabled="idx===form.legs.length-1" class="px-2 py-1 bg-gray-200 rounded cursor-pointer">↓</button>
+              <button type="button" @click="moveUp(idx)" :disabled="idx===0" class="px-2 py-1 bg-gray-200 rounded cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50">↑</button>
+              <button type="button" @click="moveDown(idx)" :disabled="idx===form.legs.length-1" class="px-2 py-1 bg-gray-200 rounded cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50">↓</button>
               <button type="button" @click="removeLeg(idx)" class="px-2 py-1 bg-red-300 rounded cursor-pointer">削除</button>
             </div>
           </div>
@@ -47,7 +47,10 @@
             </div>
             <div class="mt-2">
               <label class="text-sm block">参考URL (時刻表URLなど)</label>
-              <input v-model="(leg as any).url" class="border rounded p-1 w-full" />
+              <div class="flex gap-2">
+                <input v-model="(leg as any).url" class="border rounded p-1 w-full" />
+                <button type="button" @click="copy(idx)" :disabled="!(leg as any).url" class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer flex-shrink-0 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-50">Copy</button>
+              </div>
             </div>
             <div class="mt-2">
               <label class="text-sm block">乗車時間（分）</label>
@@ -74,7 +77,7 @@
 import { defineComponent, reactive, toRaw } from 'vue'
 import type { Route, Leg } from '../types'
 import { uid } from '../utils'
-import { parseTimetableString } from '../utils'
+import { copyToClipboard, parseTimetableString } from '../utils'
 
 export default defineComponent({
   props: {
@@ -105,6 +108,18 @@ export default defineComponent({
       timetableInputs.push('')
     }
 
+    const copy = async (idx:number) =>  {
+      if (form.legs[idx].type == 'walk' || !form.legs[idx].url){
+        return;
+      }
+      const result = await copyToClipboard(form.legs[idx].url);
+      if (result) {
+        alert('Copy succeeded');
+      }else{
+        alert('Copy failed');
+      }
+    }
+
     function removeLeg(idx:number) {
       form.legs.splice(idx,1)
       timetableInputs.splice(idx,1)
@@ -124,7 +139,7 @@ export default defineComponent({
       emit('save', JSON.parse(JSON.stringify(toRaw(form))))
     }
 
-    return { form, addWalk, addTrain, removeLeg, moveUp, moveDown, onSave, timetableInputs }
+    return { copy, form, addWalk, addTrain, removeLeg, moveUp, moveDown, onSave, timetableInputs }
   }
 })
 </script>
