@@ -29,12 +29,13 @@ export default {
   components: {RoutesPage, ManagePage},
   setup() {
     const currentPage = ref<Pages>('routes');
-    const routeGroup = ref<RouteGroup>(loadRouteGroups());
+    const routeGroup = ref<RouteGroup[]>(loadRouteGroups());
     const routes = ref<Route[]>(routeGroup.value[0].routes);
 
     function changePage(to: Pages) {
       currentPage.value = to;
-      routes.value = loadRoutes();
+      routeGroup.value = loadRouteGroups();
+      routes.value = routeGroup.value[0].routes;
     }
 
     let intervalId: number | null = null;

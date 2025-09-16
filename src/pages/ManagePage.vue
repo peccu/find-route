@@ -26,10 +26,14 @@ import { getFormattedDateTime } from '../utils'
 export default {
   components: { RouteManager },
   setup() {
-    const routeGroup = ref<RouteGroup>(loadRouteGroups());
+    const routeGroup = ref<RouteGroup[]>(loadRouteGroups());
     const routes = ref<Route[]>(routeGroup.value[0].routes);
 
-    watch(routes, (r) => saveRouteGroups([r]), { deep: true })
+    watch(routes, (r) => saveRouteGroups([{
+      id: 'routegroup-000',
+      name: 'Default ',
+      routes: r
+    }]), { deep: true })
 
     function downloadBackup() {
       const fileData: RouteFileV2 = {
