@@ -17,8 +17,15 @@
     </div>
 
     <div class="border-t pt-3">
+      <div v-if="!creating">
+        <button @click="creating = !creating" class="px-4 py-2 bg-green-500 text-white rounded cursor-pointer">
+          新規ルート追加
+        </button>
+      </div>
+      <div v-else>
       <h3 class="font-medium mb-2">新規ルート追加</h3>
-      <RouteEditor @save="addRoute" />
+        <RouteEditor @save="addRoute" @cancel="creating = false"/>
+      </div>
     </div>
 
     <div v-if="editing" class="mt-4 border-t pt-3">
@@ -41,6 +48,7 @@ export default defineComponent({
   },
   emits: ['update:routes'],
   setup(props, { emit }) {
+    const creating = ref<boolean>(false)
     const editing = ref<Route | null>(null)
 
     function addRoute(r: Route) {
@@ -65,7 +73,7 @@ export default defineComponent({
       emit('update:routes', props.routes.filter(r => r.id !== id))
     }
 
-    return { editing, addRoute, editRoute, updateRoute, removeRoute }
+    return { creating, editing, addRoute, editRoute, updateRoute, removeRoute }
   }
 })
 </script>
