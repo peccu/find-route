@@ -15,7 +15,7 @@ import { ref } from 'vue'
 import RoutesPage from './pages/RoutesPage.vue';
 import ManagePage from './pages/ManagePage.vue';
 import { loadRoutes } from './services/storage'
-import type { Route } from './types'
+import type { Route, RouteGroup } from './types'
 import { onMounted, onUnmounted } from 'vue';
 import { checkAndUpdateVersion, setStoredVersion } from './services/version-checker';
 
@@ -29,7 +29,8 @@ export default {
   components: {RoutesPage, ManagePage},
   setup() {
     const currentPage = ref<Pages>('routes');
-    const routes = ref<Route[]>(loadRoutes())
+    const routeGroup = ref<RouteGroup>(loadRoutes());
+    const routes = ref<Route[]>(routeGroup.value[0].routes);
 
     function changePage(to: Pages) {
       currentPage.value = to;
