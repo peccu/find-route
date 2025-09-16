@@ -22,7 +22,7 @@ export function loadRouteGroups(): RouteGroup[] {
       const group: RouteGroup = {
         id: 'routegroup-000',
         name: 'Default ',
-        routes: parsed.routes,
+        routes: parsed,
       }
       return [group]
     } else if (parsed.version === 2) {
