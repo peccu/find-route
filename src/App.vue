@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-4xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Route Planner SPA</h1>
+    <h1 class="text-2xl font-bold mb-4">Find Route</h1>
     <nav class="mb-4 flex gap-4">
       <button @click="changePage('routes')" class="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">経路検索</button>
       <button @click="changePage('manage')" class="px-4 py-2 bg-green-500 text-white rounded cursor-pointer">ルート管理</button>
