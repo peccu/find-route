@@ -59,9 +59,15 @@ export default {
       try {
         const txt = await f.text()
         const parsed = JSON.parse(txt)
-        if (!Array.isArray(parsed)) throw new Error('invalid')
-        routes.value = parsed
-        alert('リストア完了')
+        if (Array.isArray(parsed)){
+          routes.value = parsed
+          alert('リストア完了(v1)')
+        } else if (parsed.version === 2 && Array.isArray(parsed.groups)) {
+          routes.value = parsed.groups.flatMap(g => g.routes)
+          alert('リストア完了(v2)')
+        } else {
+          throw new Error('unsupported version')
+        }
       } catch {
         alert('不正なJSONです')
       } finally {
