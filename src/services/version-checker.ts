@@ -8,7 +8,7 @@ export const setStoredVersion = (version: string): void => {
   localStorage.setItem(VERSION_KEY, version);
 };
 
-export const checkAndUpdateVersion = async (): Promise<boolean> => {
+export const checkAndUpdateVersion = async (): Promise<[boolean, string]> => {
   try {
     // キャッシュを無効化するために、リクエストURLにタイムスタンプを追加
     const versionUrl = `/version.json?_t=${Date.now()}`;
@@ -30,19 +30,19 @@ export const checkAndUpdateVersion = async (): Promise<boolean> => {
     // 初回訪問時
     if (currentVersion === null) {
       setStoredVersion(latestVersion);
-      return false;
+      return [false,''];
     }
 
     // バージョンが異なる場合は更新を検知
     if (latestVersion !== currentVersion) {
       console.log(`Application update detected: from ${currentVersion} to ${latestVersion}`);
-      return true;
+      return [true,latestVersion];
     }
 
-    return false;
+    return [false,''];
 
   } catch (error) {
     console.error('Failed to check for application updates:', error);
-    return false;
+    return [false,''];
   }
 };
