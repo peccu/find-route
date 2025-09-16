@@ -17,7 +17,7 @@ import ManagePage from './pages/ManagePage.vue';
 import { loadRoutes } from './services/storage'
 import type { Route } from './types'
 import { onMounted, onUnmounted } from 'vue';
-import { checkAndUpdateVersion } from './services/version-checker';
+import { checkAndUpdateVersion, setStoredVersion } from './services/version-checker';
 
 
 type Pages = 'routes' | 'manage';
@@ -40,13 +40,14 @@ export default {
 
     const startUpdateChecker = () => {
       intervalId = setInterval(async () => {
-        const hasUpdate = await checkAndUpdateVersion();
+        const [hasUpdate, latestVersion] = await checkAndUpdateVersion();
         if (hasUpdate) {
           // 更新があった場合、カスタムイベントを発火
           window.dispatchEvent(updateEvent);
           // ユーザーに通知してリロードを促す
           const confirmed = confirm('新しいバージョンが利用可能です。ページをリロードしますか？');
           if (confirmed) {
+            setStoredVersion(latestVersion);
             window.location.reload();
           }
         }
