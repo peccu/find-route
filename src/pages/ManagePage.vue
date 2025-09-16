@@ -63,7 +63,7 @@ export default {
           routes.value = parsed
           alert('リストア完了(v1)')
         } else if (parsed.version === 2 && Array.isArray(parsed.groups)) {
-          routes.value = parsed.groups.flatMap(g => g.routes)
+          routes.value = parsed.groups[0].routes
           alert('リストア完了(v2)')
         } else {
           throw new Error('unsupported version')
