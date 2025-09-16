@@ -19,17 +19,17 @@
 <script lang="ts">
 import { ref, watch } from 'vue';
 import RouteManager from '../components/RouteManager.vue'
-import { loadRoutes, saveRoutes, clearRoutes } from '../services/storage'
+import { loadRouteGroups, saveRouteGroups, clearRoutes } from '../services/storage'
 import type { Route, RouteGroup, RouteFileV2 } from '../types'
 import { getFormattedDateTime } from '../utils'
 
 export default {
   components: { RouteManager },
   setup() {
-    const routeGroup = ref<RouteGroup>(loadRoutes());
+    const routeGroup = ref<RouteGroup>(loadRouteGroups());
     const routes = ref<Route[]>(routeGroup.value[0].routes);
 
-    watch(routes, (r) => saveRoutes([r]), { deep: true })
+    watch(routes, (r) => saveRouteGroups([r]), { deep: true })
 
     function downloadBackup() {
       const fileData: RouteFileV2 = {
