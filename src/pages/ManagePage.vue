@@ -20,7 +20,7 @@
 import { ref, watch } from 'vue';
 import RouteManager from '../components/RouteManager.vue'
 import { loadRoutes, saveRoutes, clearRoutes } from '../services/storage'
-import type { Route } from '../types'
+import type { Route, RouteFileV2 } from '../types'
 import { getFormattedDateTime } from '../utils'
 
 export default {
@@ -31,7 +31,19 @@ export default {
     watch(routes, (r) => saveRoutes(r), { deep: true })
 
     function downloadBackup() {
-      const blob = new Blob([JSON.stringify(routes.value, null, 2)], { type: 'application/json' })
+      const fileData: RouteFileV2 = {
+        version: 2,
+        groups: [
+          {
+            id: 'routegroup_0000',
+            name: 'Default',
+            routes: routes.value,
+          },
+        ],
+      }
+      const blob = new Blob([JSON.stringify(fileData, null, 2)], {
+        type: 'application/json',
+      })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
