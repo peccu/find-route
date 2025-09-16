@@ -1,4 +1,4 @@
-import type { Route, RouteGroup } from '../types'
+import type { Route, RouteGroup, RouteFileV2 } from '../types'
 
 const LS_KEY = 'route_simulator_routes_v1'
 
