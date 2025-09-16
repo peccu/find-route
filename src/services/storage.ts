@@ -21,7 +21,7 @@ export function loadRouteGroups(): RouteGroup[] {
     if (Array.isArray(parsed)) {
       const group: RouteGroup = {
         id: 'routegroup-000',
-        name: 'Default ',
+        name: 'Default',
         routes: parsed,
       }
       return [group]

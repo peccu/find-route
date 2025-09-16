@@ -3,6 +3,14 @@
     <h2 class="text-lg font-medium mb-2">シミュレーション</h2>
 
     <div class="mb-3">
+      <label class="block text-sm">経路グループを選択</label>
+      <select id="routes-select" v-model="selectedRoutes" class="border rounded p-2 w-40 custom-select">
+        <option v-for="group in routeGroups" :key="group.id" :value="group.routes">
+          {{group.name}}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
       <label class="block text-sm">出発時刻 (HH:MM)</label>
       <input v-model="departureTime" class="border rounded p-2 w-32" />
       <button @click="run" class="ml-2 px-3 py-1 bg-blue-600 text-white rounded cursor-pointer">シミュレート</button>
@@ -38,18 +46,19 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
-import type { Route, RouteResult, Event } from '../types'
+import type { Route, RouteGroup, RouteResult, Event } from '../types'
 import { hhmmToMinutes, minutesToHHMM, getCurrentTime } from '../utils'
 
 export default defineComponent({
   props: {
-    routes: { type: Array as () => Route[], required: true }
+    routeGroups: { type: Array as () => RouteGroup[], required: true }
   },
   setup(props) {
     const departureTime = ref(getCurrentTime());
     const results = ref<RouteResult[]>([])
+    const selectedRoutes = ref<Route[]>(props.routeGroups[0].routes)
 
-    watch(() => props.routes, () => {
+    watch(() => props.routeGroups, () => {
       // clear results when routes change
       results.value = []
     })
@@ -60,7 +69,7 @@ export default defineComponent({
       const start = hhmmToMinutes(departureTime.value)
       if (start === null) { alert('出発時刻をHH:MM形式で入力してください'); return }
       const res: RouteResult[] = []
-      for (const r of props.routes) {
+      for (const r of selectedRoutes.value) {
         const sim = simulateRoute(r, start)
         if (sim) res.push(sim)
       }
@@ -122,7 +131,20 @@ export default defineComponent({
       return { routeId: route.id, routeName: route.name, routeNote: route.notes, arrivalTime: currentTime, events }
     }
 
-    return { departureTime, run, results, format }
+    return { departureTime, run, results, format, selectedRoutes }
   }
 })
 </script>
+
+<style scoped>
+.custom-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="m2 0-2 2h4zm0 5 2-2h-4z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  padding-right: 32px;
+}
+</style>

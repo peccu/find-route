@@ -5,7 +5,7 @@
       <button @click="changePage('routes')" class="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">経路検索</button>
       <button @click="changePage('manage')" class="px-4 py-2 bg-green-500 text-white rounded cursor-pointer">ルート管理</button>
     </nav>
-    <RoutesPage v-if="currentPage === 'routes'" :routes />
+    <RoutesPage v-if="currentPage === 'routes'" :routeGroups />
     <ManagePage v-else />
   </div>
 </template>
@@ -15,7 +15,7 @@ import { ref } from 'vue'
 import RoutesPage from './pages/RoutesPage.vue';
 import ManagePage from './pages/ManagePage.vue';
 import { loadRouteGroups } from './services/storage'
-import type { Route, RouteGroup } from './types'
+import type { RouteGroup } from './types'
 import { onMounted, onUnmounted } from 'vue';
 import { checkAndUpdateVersion, setStoredVersion } from './services/version-checker';
 
@@ -29,13 +29,11 @@ export default {
   components: {RoutesPage, ManagePage},
   setup() {
     const currentPage = ref<Pages>('routes');
-    const routeGroup = ref<RouteGroup[]>(loadRouteGroups());
-    const routes = ref<Route[]>(routeGroup.value[0].routes);
+    const routeGroups = ref<RouteGroup[]>(loadRouteGroups());
 
     function changePage(to: Pages) {
       currentPage.value = to;
-      routeGroup.value = loadRouteGroups();
-      routes.value = routeGroup.value[0].routes;
+      routeGroups.value = loadRouteGroups();
     }
 
     let intervalId: number | null = null;
@@ -66,7 +64,7 @@ export default {
       }
     });
 
-    return { currentPage, changePage, routes }
+    return { currentPage, changePage, routeGroups }
   }
 }
 </script>
