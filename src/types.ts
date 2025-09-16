@@ -1,3 +1,4 @@
+// for timetable, routes and route groups
 export type WalkLeg = {
   id: string;
   type: 'walk';
@@ -25,6 +26,24 @@ export type Route = {
   notes?: string;
 };
 
+export type RouteFileV1 = {
+  version: 1;
+  routes: Route[];
+};
+
+export type RouteGroup = {
+  id: string;
+  name: string;
+  description?: string;
+  routes: Route[];
+};
+
+export type RouteFileV2 = {
+  version: 2;
+  groups: RouteGroup[];
+};
+
+// for found results
 export type Event = {
   legId: string;
   legType: 'walk' | 'train';
