@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-4">
-    <RouteManager v-model:routes="routes" />
+    <RouteGroupManager v-model:routeGroups="routeGroups" />
     <div class="bg-white p-4 rounded shadow">
       <h2 class="font-medium mb-2">バックアップ / リストア</h2>
       <div class="flex gap-2">
@@ -18,33 +18,24 @@
 
 <script lang="ts">
 import { ref, watch } from 'vue';
-import RouteManager from '../components/RouteManager.vue'
+import RouteGroupManager from '../components/RouteGroupManager.vue'
 import { loadRouteGroups, saveRouteGroups, clearRoutes } from '../services/storage'
 import type { Route, RouteGroup, RouteFileV2 } from '../types'
 import { getFormattedDateTime } from '../utils'
 
 export default {
-  components: { RouteManager },
+  components: { RouteGroupManager },
   setup() {
-    const routeGroup = ref<RouteGroup[]>(loadRouteGroups());
-    const routes = ref<Route[]>(routeGroup.value[0].routes);
+    const routeGroups = ref<RouteGroup[]>(loadRouteGroups());
 
-    watch(routes, (r) => saveRouteGroups([{
-      id: 'routegroup-000',
-      name: 'Default ',
-      routes: r
-    }]), { deep: true })
+    watch(routeGroups, (r) => {
+      saveRouteGroups(r)
+    }, { deep: true })
 
     function downloadBackup() {
       const fileData: RouteFileV2 = {
         version: 2,
-        groups: [
-          {
-            id: 'routegroup_0000',
-            name: 'Default',
-            routes: routes.value,
-          },
-        ],
+        groups: routeGroups.value,
       }
       const blob = new Blob([JSON.stringify(fileData, null, 2)], {
         type: 'application/json',
@@ -65,10 +56,14 @@ export default {
         const txt = await f.text()
         const parsed = JSON.parse(txt)
         if (Array.isArray(parsed)){
-          routes.value = parsed
+          routeGroups.value = [{
+            id: 'routegroup-000',
+            name: 'Default ',
+            routes: parsed
+          }];
           alert('リストア完了(v1)')
         } else if (parsed.version === 2 && Array.isArray(parsed.groups)) {
-          routes.value = parsed.groups[0].routes
+          routeGroups.value = parsed
           alert('リストア完了(v2)')
         } else {
           throw new Error('unsupported version')
@@ -82,11 +77,11 @@ export default {
 
     function resetAll() {
       if (!confirm('全てのルートを削除します。よろしいですか？')) return
-      routes.value = []
+      routeGroups.valuse = []
       clearRoutes()
     }
 
-    return { routes, downloadBackup, onFileUpload, resetAll }
+    return { routeGroups, downloadBackup, onFileUpload, resetAll }
   }
 }
 </script>
