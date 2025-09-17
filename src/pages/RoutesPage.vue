@@ -64,7 +64,7 @@ export default defineComponent({
   setup(props) {
     const departureTime = ref(getCurrentTime());
     const results = ref<RouteResult[]>([])
-    const selectedRoutes = ref<Route[]>(props.routeGroups[0].routes)
+    const selectedRoutes = ref<Route[]>(props.routeGroups && props.routeGroups[0] ? props.routeGroups[0].routes : [])
 
     watch(() => props.routeGroups, () => {
       // clear results when routes change

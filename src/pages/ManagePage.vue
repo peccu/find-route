@@ -63,7 +63,7 @@ export default {
           }];
           alert('リストア完了(v1)')
         } else if (parsed.version === 2 && Array.isArray(parsed.groups)) {
-          routeGroups.value = parsed
+          routeGroups.value = parsed.groups
           alert('リストア完了(v2)')
         } else {
           throw new Error('unsupported version')
