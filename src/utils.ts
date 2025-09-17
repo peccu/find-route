@@ -29,11 +29,14 @@ export function uid(prefix = ''): string {
   return prefix + Math.random().toString(36).slice(2, 9);
 }
 
-export function getCurrentTime(): string {
-  const now = new Date();
+export function getSpecifiedTime(now: Date): string {
   const hh = String(now.getHours()).padStart(2, '0');
   const mm = String(now.getMinutes()).padStart(2, '0');
   return `${hh}:${mm}`;
+}
+
+export function getCurrentTime(): string {
+  return getSpecifiedTime(new Date());
 }
 
 export function getFormattedDateTime() {

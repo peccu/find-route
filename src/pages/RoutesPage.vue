@@ -29,10 +29,16 @@
 
       <div class="mt-2 text-sm">
         <div v-for="ev in res.events" :key="ev.legId" class="py-1">
-          <div v-if="ev.legType === 'walk'">徒歩 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}</div>
+          <div v-if="ev.legType === 'walk'">徒歩 ({{ev.durationMinutes}}分) :
+            <span :class="timeClass(ev.legId, ev.departure)">{{ format(ev.departure) }}</span>
+            →
+            <span :class="timeClass(ev.legId, ev.arrival)">{{ format(ev.arrival) }}</span></div>
           <div v-else>
             <div>
-              電車 ({{ev.durationMinutes}}分) : {{ format(ev.departure) }} → {{ format(ev.arrival) }}
+              電車 ({{ev.durationMinutes}}分) :
+              <span :class="timeClass(ev.legId, ev.departure)">{{ format(ev.departure) }}</span>
+              →
+              <span :class="timeClass(ev.legId, ev.arrival)">{{ format(ev.arrival) }}</span>
             </div>
             <div>
               {{ ev.legLine }} ({{ ev.legFrom }} → {{ ev.legTo }})
@@ -41,13 +47,14 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, computed } from 'vue'
 import type { Route, RouteGroup, RouteResult, Event } from '../types'
-import { hhmmToMinutes, minutesToHHMM, getCurrentTime } from '../utils'
+import { hhmmToMinutes, minutesToHHMM, getSpecifiedTime, getCurrentTime } from '../utils'
 import { simulateRoute } from '../lib/simulate'
 
 export default defineComponent({
@@ -64,6 +71,35 @@ export default defineComponent({
       results.value = []
     })
 
+    const nextEvent = computed(() => {
+      const all = results.value.map(r => {
+        // TODO pick departure or arrival
+        const future = r.events.filter(ev => isFuture(ev.departure))
+        return future.length ? future.sort((a, b) => a.departure - b.departure)[0] : null
+      })
+      return all.flatMap(r => r.legId);
+    })
+
+    const now = ref(new Date())
+    setInterval(() => {
+      now.value = new Date()
+    }, 60 * 1000)
+
+    function isPast(time: string | Date) {
+      return minutesToHHMM(time) < getSpecifiedTime(now.value)
+    }
+    function isFuture(time: string | Date) {
+      return minutesToHHMM(time) >= getSpecifiedTime(now.value)
+    }
+
+    function timeClass(legId: string, time: string | Date) {
+      return {
+        'bg-yellow-200 font-bold px-1 rounded': (nextEvent.value && nextEvent.value.includes(legId)),
+        'underline': isPast(time),
+        'font-bold': isFuture(time),
+      }
+    }
+
     function format(mins:number){ return minutesToHHMM(mins) }
 
     function run() {
@@ -78,7 +114,7 @@ export default defineComponent({
       results.value = res
     }
 
-    return { departureTime, run, results, format, selectedRoutes }
+    return { departureTime,  run, results, format, selectedRoutes, timeClass }
   }
 })
 </script>
