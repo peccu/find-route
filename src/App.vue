@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto p-6">
+  <div class="w-full lg:max-w-4xl mx-auto p-0 lg:p-6">
   <h1 class="text-2xl font-bold mb-4">Find Route</h1>
 
   <div class="mb-4 inline-flex rounded-full bg-gray-200 p-1">
