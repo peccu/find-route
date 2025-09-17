@@ -4,7 +4,7 @@
 
     <div class="mb-3">
       <label class="block text-sm">経路グループを選択</label>
-      <select id="routes-select" v-model="selectedRoutes" class="border rounded p-2 w-40 custom-select">
+      <select id="routes-select" v-model="selectedRoutes" class="border rounded p-2 w-60 custom-select">
         <option v-for="group in routeGroups" :key="group.id" :value="group.routes">
           {{group.name}}</option>
       </select>
