@@ -1,13 +1,35 @@
 <template>
   <div class="max-w-4xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Find Route</h1>
-    <nav class="mb-4 flex gap-4">
-      <button @click="changePage('routes')" class="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer">経路検索</button>
-      <button @click="changePage('manage')" class="px-4 py-2 bg-green-500 text-white rounded cursor-pointer">ルート管理</button>
-    </nav>
-    <RoutesPage v-if="currentPage === 'routes'" :routeGroups />
-    <ManagePage v-else />
+  <h1 class="text-2xl font-bold mb-4">Find Route</h1>
+
+  <div class="mb-4 inline-flex rounded-full bg-gray-200 p-1">
+    <button
+      @click="changePage('routes')"
+      :class="[
+        'px-6 py-2 rounded-full transition',
+        currentPage === 'routes'
+          ? 'bg-blue-500 text-white shadow'
+          : 'text-gray-600 hover:bg-gray-300'
+      ]"
+    >
+      経路検索
+    </button>
+    <button
+      @click="changePage('manage')"
+      :class="[
+        'px-6 py-2 rounded-full transition',
+        currentPage === 'manage'
+          ? 'bg-green-500 text-white shadow'
+          : 'text-gray-600 hover:bg-gray-300'
+      ]"
+    >
+      ルート管理
+    </button>
   </div>
+
+  <RoutesPage v-if="currentPage === 'routes'" :routeGroups />
+  <ManagePage v-else />
+</div>
 </template>
 
 <script lang="ts">
