@@ -19,7 +19,7 @@
       :class="[
         'px-6 py-2 rounded-full transition',
         currentPage === 'manage'
-          ? 'bg-green-500 text-white shadow'
+          ? 'bg-blue-500 text-white shadow'
           : 'text-gray-600 hover:bg-gray-300'
       ]"
     >
