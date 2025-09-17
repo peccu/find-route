@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch, computed } from 'vue'
-import type { Route, RouteGroup, RouteResult, Event } from '../types'
+import type { Route, RouteGroup, RouteResult } from '../types'
 import { hhmmToMinutes, minutesToHHMM, getSpecifiedTime, getCurrentTime } from '../utils'
 import { simulateRoute } from '../lib/simulate'
 
@@ -77,7 +77,7 @@ export default defineComponent({
         const future = r.events.filter(ev => isFuture(ev.departure))
         return future.length ? future.sort((a, b) => a.departure - b.departure)[0] : null
       })
-      return all.flatMap(r => r.legId);
+      return all.filter(r => !!r).flatMap(r => r.legId);
     })
 
     const now = ref(new Date())
@@ -85,14 +85,14 @@ export default defineComponent({
       now.value = new Date()
     }, 60 * 1000)
 
-    function isPast(time: string | Date) {
+    function isPast(time: number) {
       return minutesToHHMM(time) < getSpecifiedTime(now.value)
     }
-    function isFuture(time: string | Date) {
+    function isFuture(time: number) {
       return minutesToHHMM(time) >= getSpecifiedTime(now.value)
     }
 
-    function timeClass(legId: string, time: string | Date) {
+    function timeClass(legId: string, time: number) {
       return {
         'bg-yellow-200 font-bold px-1 rounded': (nextEvent.value && nextEvent.value.includes(legId)),
         'underline': isPast(time),

@@ -36,7 +36,7 @@
 
     <div v-else>
       <input
-        v-model="currentGroup.name"
+        v-model="currentGroup!.name"
         placeholder="グループ名"
         class="border px-2 py-1 rounded"
       />(自動保存)

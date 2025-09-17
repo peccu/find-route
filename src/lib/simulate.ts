@@ -1,3 +1,5 @@
+import type { Event, Route, RouteResult } from '../types'
+
 export function simulateRoute(route: Route, startTime: number): RouteResult | null {
   let currentTime = startTime
   const events: Event[] = []

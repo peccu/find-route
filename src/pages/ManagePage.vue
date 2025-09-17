@@ -20,7 +20,7 @@
 import { ref, watch } from 'vue';
 import RouteGroupManager from '../components/RouteGroupManager.vue'
 import { loadRouteGroups, saveRouteGroups, clearRoutes } from '../services/storage'
-import type { Route, RouteGroup, RouteFileV2 } from '../types'
+import type { RouteGroup, RouteFileV2 } from '../types'
 import { getFormattedDateTime } from '../utils'
 
 export default {
@@ -77,7 +77,7 @@ export default {
 
     function resetAll() {
       if (!confirm('全てのルートを削除します。よろしいですか？')) return
-      routeGroups.valuse = []
+      routeGroups.value = []
       clearRoutes()
     }
 
