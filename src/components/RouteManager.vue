@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 rounded shadow">
+  <div class="bg-white mt-4">
     <h2 class="text-lg font-medium mb-2">ルート管理</h2>
     <div v-if="routes.length === 0" class="text-sm text-gray-500 mb-2">ルートがありません。追加してください。</div>
 
@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="border-t pt-3">
+    <div>
       <div v-if="!creating">
         <button @click="creating = !creating" class="px-4 py-2 bg-green-500 text-white rounded cursor-pointer">
           新規ルート追加
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div v-if="editing" class="mt-4 border-t pt-3">
+    <div v-if="editing" class="mt-4">
       <h3 class="font-medium mb-2">ルート編集</h3>
       <RouteEditor :initial="editing" @save="updateRoute" @cancel="editing = null" />
     </div>
