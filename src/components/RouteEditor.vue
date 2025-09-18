@@ -100,11 +100,11 @@ export default defineComponent({
     }).join(', ') : ''))
 
     function addWalk() {
-      form.legs.push({ id: uid('leg_'), type: 'walk', durationMinutes: '' } as Leg)
+      form.legs.push({ id: uid('leg_'), type: 'walk', durationMinutes: 0 } as Leg)
       timetableInputs.push('')
     }
     function addTrain() {
-      form.legs.push({ id: uid('leg_'), type: 'train', line: '', from: '', to: '', timetable: [], url: '', durationMinutes: '' } as Leg)
+      form.legs.push({ id: uid('leg_'), type: 'train', line: '', from: '', to: '', timetable: [], url: '', durationMinutes: 0 } as Leg)
       timetableInputs.push('')
     }
 
@@ -134,7 +134,7 @@ export default defineComponent({
       emit('save', JSON.parse(JSON.stringify(toRaw(form))))
     }
 
-    function selectAll(event) {
+    function selectAll(event: any) {
       event.target.select()
     }
 

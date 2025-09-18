@@ -114,7 +114,7 @@ export default defineComponent({
       results.value = res
     }
 
-    function selectAll(event) {
+    function selectAll(event: any) {
       event.target.select()
     }
 
