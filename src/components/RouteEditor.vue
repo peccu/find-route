@@ -25,7 +25,7 @@
 
           <div v-if="leg.type === 'walk'">
             <label class="text-sm block">徒歩時間（分）</label>
-            <input type="number" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
+            <input type="text" inputmode="numeric" pattern="[0-9]*" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
           </div>
 
           <div v-else>
@@ -54,7 +54,7 @@
             </div>
             <div class="mt-2">
               <label class="text-sm block">乗車時間（分）</label>
-              <input type="number" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
+              <input type="text" inputmode="numeric" pattern="[0-9]*" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
             </div>
           </div>
         </div>
