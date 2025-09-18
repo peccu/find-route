@@ -25,7 +25,7 @@
 
           <div v-if="leg.type === 'walk'">
             <label class="text-sm block">徒歩時間（分）</label>
-            <input type="text" inputmode="numeric" pattern="[0-9]*" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
+            <input @focus="selectAll" type="text" inputmode="numeric" pattern="[0-9]*" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
           </div>
 
           <div v-else>
@@ -54,7 +54,7 @@
             </div>
             <div class="mt-2">
               <label class="text-sm block">乗車時間（分）</label>
-              <input type="text" inputmode="numeric" pattern="[0-9]*" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
+              <input @focus="selectAll" type="text" inputmode="numeric" pattern="[0-9]*" v-model.number="(leg as any).durationMinutes" class="border rounded p-1 w-32" />
             </div>
           </div>
         </div>
@@ -134,7 +134,11 @@ export default defineComponent({
       emit('save', JSON.parse(JSON.stringify(toRaw(form))))
     }
 
-    return { open, form, addWalk, addTrain, removeLeg, moveUp, moveDown, onSave, timetableInputs }
+    function selectAll(event) {
+      event.target.select()
+    }
+
+    return { open, form, addWalk, addTrain, removeLeg, moveUp, moveDown, onSave, timetableInputs, selectAll }
   }
 })
 </script>
