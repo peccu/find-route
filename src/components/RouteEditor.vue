@@ -100,11 +100,11 @@ export default defineComponent({
     }).join(', ') : ''))
 
     function addWalk() {
-      form.legs.push({ id: uid('leg_'), type: 'walk', durationMinutes: 5 } as Leg)
+      form.legs.push({ id: uid('leg_'), type: 'walk', durationMinutes: '' } as Leg)
       timetableInputs.push('')
     }
     function addTrain() {
-      form.legs.push({ id: uid('leg_'), type: 'train', line: '', from: '', to: '', timetable: [], url: '', durationMinutes: 10 } as Leg)
+      form.legs.push({ id: uid('leg_'), type: 'train', line: '', from: '', to: '', timetable: [], url: '', durationMinutes: '' } as Leg)
       timetableInputs.push('')
     }
 
