@@ -12,7 +12,7 @@
 
     <div class="mb-3">
       <label class="block text-sm">出発時刻 (HH:MM)</label>
-      <input v-model="departureTime" class="border rounded p-2 w-32" />
+      <input @focus="selectAll" v-model="departureTime" class="border rounded p-2 w-32" />
       <button @click="run" class="ml-2 px-3 py-1 bg-blue-600 text-white rounded cursor-pointer">シミュレート</button>
     </div>
 
@@ -114,7 +114,11 @@ export default defineComponent({
       results.value = res
     }
 
-    return { departureTime,  run, results, format, selectedRoutes, timeClass }
+    function selectAll(event) {
+      event.target.select()
+    }
+
+    return { departureTime,  run, results, format, selectedRoutes, timeClass, selectAll }
   }
 })
 </script>
