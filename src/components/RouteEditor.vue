@@ -1,6 +1,11 @@
 <template>
   <div>
     <form @submit.prevent="onSave" class="space-y-3">
+      <div class="flex gap-2">
+        <button class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer">保存</button>
+        <button type="button" @click="$emit('cancel')" class="px-3 py-2 bg-gray-200 rounded cursor-pointer">キャンセル</button>
+      </div>
+
       <div>
         <label class="block text-sm">ルート名</label>
         <input v-model="form.name" class="w-full border rounded p-2" />
@@ -69,6 +74,7 @@
         <button class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer">保存</button>
         <button type="button" @click="$emit('cancel')" class="px-3 py-2 bg-gray-200 rounded cursor-pointer">キャンセル</button>
       </div>
+
     </form>
   </div>
 </template>
