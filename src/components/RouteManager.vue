@@ -56,6 +56,7 @@ export default defineComponent({
       r.id = uid('route_')
       const list = [...props.routes, r]
       emit('update:routes', list)
+      creating.value = false
     }
 
     function editRoute(r: Route) {
