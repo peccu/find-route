@@ -52,7 +52,8 @@
     <p class="text-gray-700">
       緯度: {{ lat }} / 経度: {{ lng }}
     </p>
-<a target="_blank" class="underline text-blue-800" :href="`https://maps.google.com/?q=(${lat}, ${lng})`">Google Mapsで確認</a>
+<a v-if="lat" target="_blank" class="underline text-blue-800" :href="`https://maps.google.com/?q=(${lat}, ${lng})`">Google Mapsで確認</a>
+<a v-else target="_blank" class="underline text-blue-800" href="https://maps.google.com/">Google Mapsで探す</a>
   </div>
 
       <RouteManager
