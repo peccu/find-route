@@ -1,6 +1,5 @@
 <template>
   <div class="bg-white p-4 rounded shadow">
-    <h2 class="text-lg font-medium mb-2">ルートグループ管理</h2>
 
     <div class="flex items-center mb-3 gap-2">
       <select v-model="selectedGroupId" class="border rounded p-2 w-60 custom-select">
@@ -19,6 +18,8 @@
         グループ削除
       </button>
     </div>
+
+    <h2 class="text-lg font-medium mb-2">ルートグループ管理</h2>
 
     <div v-if="creatingGroup" class="mt-4">
       <input
