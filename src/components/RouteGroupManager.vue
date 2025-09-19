@@ -26,18 +26,19 @@
         placeholder="グループ名"
         class="border px-2 py-1 rounded"
       />
-
+are
   <div class="p-4 space-y-4">
+kore
     <LocationInput
       v-model:modelValueLat="lat"
       v-model:modelValueLng="lng"
     />
-
+sore
     <p class="text-gray-700">
       緯度: {{ lat }} / 経度: {{ lng }}
     </p>
   </div>
-
+dore
       <button @click="addGroup" class="ml-2 px-3 py-1 bg-blue-500 text-white rounded">
         保存
       </button>
