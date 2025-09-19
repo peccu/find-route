@@ -42,7 +42,7 @@
         class="border px-2 py-1 rounded"
       />(自動保存)
 
-  <div class="p-4 space-y-4">
+  <div class="space-y-4">
     <LocationInput
       v-model:modelValueLat="lat"
       v-model:modelValueLng="lng"
@@ -50,7 +50,7 @@
     <p class="text-gray-700">
       緯度: {{ lat }} / 経度: {{ lng }}
     </p>
-<a target="_blank" :href="`https://maps.google.com/?q=(${lat}, ${lng})`">Google Mapsで確認</a>
+<a target="_blank" class="underline text-blue-800" :href="`https://maps.google.com/?q=(${lat}, ${lng})`">Google Mapsで確認</a>
   </div>
 
       <RouteManager
