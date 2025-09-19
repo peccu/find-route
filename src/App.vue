@@ -27,14 +27,14 @@
       </button>
     </div>
 
-    <RoutesPage v-if="currentPage === 'routes'" :routeGroups />
+    <SimulatePage v-if="currentPage === 'routes'" :routeGroups />
     <ManagePage v-else />
   </div>
 </template>
 
 <script lang="ts">
 import { ref } from 'vue'
-import RoutesPage from './pages/RoutesPage.vue';
+import SimulatePage from './pages/SimulatePage.vue';
 import ManagePage from './pages/ManagePage.vue';
 import { loadRouteGroups } from './services/storage'
 import type { RouteGroup } from './types'
@@ -48,7 +48,7 @@ type Pages = 'routes' | 'manage';
 const updateEvent = new CustomEvent('app-update-available');
 
 export default {
-  components: {RoutesPage, ManagePage},
+  components: {SimulatePage, ManagePage},
   setup() {
     const currentPage = ref<Pages>('routes');
     const routeGroups = ref<RouteGroup[]>(loadRouteGroups());
