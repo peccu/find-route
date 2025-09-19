@@ -83,7 +83,7 @@ export default defineComponent({
     const now = ref(new Date())
     setInterval(() => {
       now.value = new Date()
-    }, 60 * 1000)
+    }, 10 * 1000)
 
     function isPast(time: number) {
       return minutesToHHMM(time) < getSpecifiedTime(now.value)
