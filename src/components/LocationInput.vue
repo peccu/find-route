@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue"
-import { LocationService } from "./LocationService"
+import { LocationService } from "../services/location-service"
 
 interface Props {
   modelValueLat: number | null
