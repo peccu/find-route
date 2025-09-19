@@ -3,8 +3,8 @@
 
     <div class="flex items-center mb-3 gap-2">
       <select v-model="selectedGroupId" class="border rounded p-2 w-60 custom-select">
-        <option v-for="g in routeGroups" :key="g.id" :value="g.id">
-          {{ g.name }}
+        <option v-for="group in routeGroups" :key="group.id" :value="group.id">
+          {{ group.name }}
         </option>
       </select>
       <button @click="creatingGroup = true" class="px-2 py-1 bg-green-500 text-white rounded">
@@ -86,29 +86,29 @@ const lat = ref<number | null>(null)
 const lng = ref<number | null>(null)
 
 const currentGroup = computed(() =>
-  props.routeGroups.find(g => g.id === selectedGroupId.value) ?? null
+  props.routeGroups.find(group => group.id === selectedGroupId.value) ?? null
 )
 
 function addGroup() {
-  const g: RouteGroup = { id: uid('routeGroup_'), name: newGroupName.value, routes: [] }
-  const list = [...props.routeGroups, g]
+  const group: RouteGroup = { id: uid('routeGroup_'), name: newGroupName.value, routes: [] }
+  const list = [...props.routeGroups, group]
   emit('update:routeGroups', list)
-  selectedGroupId.value = g.id
+  selectedGroupId.value = group.id
   creatingGroup.value = false
   newGroupName.value = ''
 }
 
 function updateRoutes(routes: Route[]) {
   if (!currentGroup.value) return
-  const list = props.routeGroups.map(g =>
-    g.id === currentGroup.value!.id ? { ...g, routes } : g
+  const list = props.routeGroups.map(group =>
+    group.id === currentGroup.value!.id ? { ...group, routes } : group
   )
   emit('update:routeGroups', list)
 }
 
 function removeGroup(id: string) {
   if (!confirm('このグループを削除しますか？')) return
-  const list = props.routeGroups.filter(g => g.id !== id)
+  const list = props.routeGroups.filter(group => group.id !== id)
   emit('update:routeGroups', list)
 
   // 削除したグループが選択中だった場合は選択をリセット
