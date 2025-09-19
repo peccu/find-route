@@ -37,12 +37,14 @@
     </div>
 
     <div v-else class="space-y-4">
+<div class="space-y-1">
 <div>グループ名</div>
       <input
         v-model="currentGroup!.name"
         placeholder="グループ名"
         class="border px-2 py-1 rounded"
       />(自動保存)
+</div>
 
   <div class="space-y-1">
 <div>位置設定</div>
