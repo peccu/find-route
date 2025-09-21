@@ -12,7 +12,7 @@ export class LocationService {
 
     try {
       const permission = await (navigator as any).permissions?.query?.({ name: "geolocation" });
-      
+
       if (permission && permission.state === "denied") {
         console.warn("ユーザーが位置情報の利用を拒否しました。");
         return null;
