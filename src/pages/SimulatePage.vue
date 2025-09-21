@@ -2,13 +2,15 @@
   <div class="bg-white p-4 rounded shadow space-y-3">
     <h2 class="text-lg font-medium mb-2">シミュレーション</h2>
 
-    <div>
-      <label class="block text-sm">経路グループを選択</label>
-      <select id="routes-select" v-model="selectedRoutes" class="border rounded p-2 w-60 custom-select">
-        <option v-for="group in routeGroups" :key="group.id" :value="group.routes">
-          {{group.name}}</option>
-      </select>
-    </div>
+    <CustomSelector
+      v-model="selectedGroup"
+      :items="routeGroups"
+      label-key="name"
+      value-key="name"
+      label="経路グループを選択"
+      placeholder="選択してください"
+    />
+      :initial-select="initialRouteGroup"
 
     <RouteSimulator v-model:selectedRoutes="selectedRoutes" />
 
@@ -19,21 +21,29 @@
 import { defineComponent, ref, watch } from 'vue'
 import type { Route, RouteGroup } from '../types'
 import RouteSimulator from '../components/RouteSimulator.vue'
+import CustomSelector from '../components/CustomSelector.vue'
 
 export default defineComponent({
-  components: { RouteSimulator },
+  components: { RouteSimulator, CustomSelector },
   props: {
     routeGroups: { type: Array as () => RouteGroup[], required: true }
   },
   setup(props) {
-    const selectedRoutes = ref<Route[]>(props.routeGroups && props.routeGroups[0] ? props.routeGroups[0].routes : [])
+    const selectedRoutes = ref<Route[] | null>([])
+    const selectedGroup = ref<RouteGroup | null>(null)
 
     watch(() => props.routeGroups, () => {
       // clear results when routes change
       selectedRoutes.value = []
     })
 
-    return { selectedRoutes }
+    watch(selectedGroup, () => {
+      selectedRoutes.value = selectedGroup.value?.routes ?? null
+    })
+
+    const initialRouteGroup = (item: RouteGroup) => props.routeGroups && item.id === props.routeGroups[0].id;
+
+    return { selectedRoutes, selectedGroup, initialRouteGroup, cities, selectedCity, isNearestCity }
   }
 })
 </script>
