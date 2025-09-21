@@ -43,7 +43,7 @@ const props = defineProps<{
   valueKey: keyof T & string;
   label?: string;
   placeholder?: string;
-  initialSelect?: (item: T) => boolean;
+  initialSelect?: (items: T[]) => Promise<T | null>;
 }>();
 
 const emit = defineEmits<{
@@ -74,11 +74,11 @@ const handleClickOutside = (e: MouseEvent) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener("click", handleClickOutside);
 
   if (!props.modelValue && props.initialSelect) {
-    const found = props.items.find((i) => props.initialSelect!(i));
+    const found = await props.initialSelect(props.items);
     if (found) {
       emit("update:modelValue", found);
     }

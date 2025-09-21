@@ -22,6 +22,8 @@ import { defineComponent, ref, watch } from 'vue'
 import type { Route, RouteGroup } from '../types'
 import RouteSimulator from '../components/RouteSimulator.vue'
 import CustomSelector from '../components/CustomSelector.vue'
+import { LocationService } from "../services/location-service"
+import { findNearest } from '../lib/near-location'
 
 export default defineComponent({
   components: { RouteSimulator, CustomSelector },
@@ -41,9 +43,21 @@ export default defineComponent({
       selectedRoutes.value = selectedGroup.value?.routes ?? null
     })
 
-    const initialRouteGroup = (item: RouteGroup) => props.routeGroups && item.id === props.routeGroups[0].id;
+    const initialRouteGroup = async (items: RouteGroup[]) => {
+      const first = items && items[0];
+      const locationItems = items.filter((item) => item.lat && item.lng);
+      if (!locationItems) {
+        return first;
+      }
+      const pos = await LocationService.getCurrentPosition()
+      if (!pos) {
+        alert("位置情報を取得できませんでした。")
+        return first;
+      }
+      return findNearest(locationItems, pos)
+    }
 
-    return { selectedRoutes, selectedGroup, initialRouteGroup, cities, selectedCity, isNearestCity }
+    return { selectedRoutes, selectedGroup, initialRouteGroup }
   }
 })
 </script>

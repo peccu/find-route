@@ -36,6 +36,8 @@ export type RouteGroup = {
   name: string;
   description?: string;
   routes: Route[];
+  lat?: number;
+  lng?: number;
 };
 
 export type RouteFileV2 = {
