@@ -53,7 +53,7 @@ import { simulateRoute } from '../lib/simulate'
 
 export default defineComponent({
   props: {
-    selectedRoutes: { type: Array as () => Route[], required: true }
+    selectedRoutes: { type: Array as () => Route[] | null, required: true }
   },
   setup(props) {
     const departureTime = ref(getCurrentTime());
@@ -67,9 +67,11 @@ export default defineComponent({
       const start = hhmmToMinutes(departureTime.value)
       if (start === null) { alert('出発時刻をHH:MM形式で入力してください'); return }
       const res: RouteResult[] = []
-      for (const r of props.selectedRoutes) {
-        const sim = simulateRoute(r, start)
-        if (sim) res.push(sim)
+      if (props.selectedRoutes) {
+        for (const r of props.selectedRoutes) {
+          const sim = simulateRoute(r, start)
+          if (sim) res.push(sim)
+        }
       }
       res.sort((a,b)=>a.arrivalTime - b.arrivalTime)
       results.value = res
