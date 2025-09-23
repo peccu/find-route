@@ -142,7 +142,7 @@ const emit = defineEmits<{
 watch(
   () => props.routeGroups,
   (g) => {
-    if (!g) {
+    if (g.length === 0) {
       selectedGroup.value = null
     }
   },
