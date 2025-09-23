@@ -63,16 +63,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-.custom-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="m2 0-2 2h4zm0 5 2-2h-4z"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  background-size: 12px;
-  padding-right: 32px;
-}
-</style>
