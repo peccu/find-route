@@ -48,7 +48,7 @@ export default defineComponent({
     const initialRouteGroup = async (items: RouteGroup[]) => {
       const first = items && items[0]
       const locationItems = items.filter((item) => item.lat && item.lng)
-      if (!locationItems) {
+      if (locationItems.length === 0) {
         return first
       }
       const pos = await LocationService.getCurrentPosition()
