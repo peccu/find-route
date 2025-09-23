@@ -128,7 +128,7 @@ import { ref } from 'vue'
 import RouteManager from './RouteManager.vue'
 import LocationInput from './LocationInput.vue'
 import EmbedMap from './EmbedMap.vue'
-import CustomSelector from '../components/CustomSelector.vue'
+import CustomSelector from '../components/ui-parts/CustomSelector.vue'
 import type { RouteGroup, Route } from '../types'
 import { uid } from '../utils'
 

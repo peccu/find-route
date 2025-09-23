@@ -20,7 +20,7 @@
 import { defineComponent, ref, watch } from 'vue'
 import type { Route, RouteGroup } from '../types'
 import RouteSimulator from '../components/RouteSimulator.vue'
-import CustomSelector from '../components/CustomSelector.vue'
+import CustomSelector from '../components/ui-parts/CustomSelector.vue'
 import { LocationService } from '../services/location-service'
 import { findNearest } from '../lib/near-location'
 
