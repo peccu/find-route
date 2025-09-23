@@ -126,11 +126,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import RouteManager from './RouteManager.vue'
-import LocationInput from './ui-parts/LocationInput.vue'
-import EmbedMap from './ui-parts/EmbedMap.vue'
-import CustomSelector from '../components/ui-parts/CustomSelector.vue'
-import type { RouteGroup, Route } from '../types'
-import { uid } from '../utils'
+import LocationInput from '../ui-parts/LocationInput.vue'
+import EmbedMap from '../ui-parts/EmbedMap.vue'
+import CustomSelector from '../ui-parts/CustomSelector.vue'
+import type { RouteGroup, Route } from '../../types'
+import { uid } from '../../utils'
 
 const props = defineProps<{
   routeGroups: RouteGroup[]

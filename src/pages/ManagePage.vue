@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { ref, watch } from 'vue'
-import RouteGroupManager from '../components/RouteGroupManager.vue'
+import RouteGroupManager from '../components/manager/RouteGroupManager.vue'
 import {
   loadRouteGroups,
   saveRouteGroups,

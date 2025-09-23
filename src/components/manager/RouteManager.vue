@@ -63,8 +63,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import RouteEditor from './RouteEditor.vue'
-import type { Route } from '../types'
-import { uid } from '../utils'
+import type { Route } from '../../types'
+import { uid } from '../../utils'
 
 export default defineComponent({
   components: { RouteEditor },

@@ -170,9 +170,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRaw } from 'vue'
-import type { Route, Leg } from '../types'
-import { uid } from '../utils'
-import { parseTimetableString } from '../utils'
+import type { Route, Leg } from '../../types'
+import { uid, parseTimetableString } from '../../utils'
 
 export default defineComponent({
   props: {
