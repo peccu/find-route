@@ -25,8 +25,8 @@ import { ref, watch } from 'vue'
 import { LocationService } from '../services/location-service'
 
 interface Props {
-  modelValueLat: number | null
-  modelValueLng: number | null
+  modelValueLat?: number | null
+  modelValueLng?: number | null
 }
 
 const props = defineProps<Props>()

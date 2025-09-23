@@ -91,14 +91,14 @@
       <div class="space-y-1">
         <div>位置設定</div>
         <LocationInput
-          v-model:modelValueLat="lat"
-          v-model:modelValueLng="lng"
+          v-model:modelValueLat="selectedGroup.lat"
+          v-model:modelValueLng="selectedGroup.lng"
         />
         <a
-          v-if="lat"
+          v-if="selectedGroup.lat"
           target="_blank"
           class="underline text-blue-800"
-          :href="`https://maps.google.com/?q=(${lat}, ${lng})`"
+          :href="`https://maps.google.com/?q=(${selectedGroup.lat}, ${selectedGroup.lng})`"
           >Google Mapsで確認</a
         >
         <a
@@ -139,18 +139,22 @@ const creatingGroup = ref(false)
 const newGroupName = ref('')
 const newLat = ref<number | null>(null)
 const newLng = ref<number | null>(null)
-const lat = ref<number | null>(null)
-const lng = ref<number | null>(null)
 
 function addGroup() {
-    const group: RouteGroup = { id: uid('routeGroup_'), name: newGroupName.value, routes: [] }
-    const list = [...props.routeGroups, group]
-    selectedGroup.value = group
-    creatingGroup.value = false
-    newGroupName.value = ''
-    newLat.value = null
-    newLng.value = null
-    emit('update:routeGroups', list)
+  const group: RouteGroup = {
+    id: uid('routeGroup_'),
+    name: newGroupName.value,
+    routes: [],
+    ...(newLat.value ? { lat: newLat.value } : {}),
+    ...(newLng.value ? { lng: newLng.value } : {}),
+  }
+  const list = [...props.routeGroups, group]
+  selectedGroup.value = group
+  creatingGroup.value = false
+  newGroupName.value = ''
+  newLat.value = null
+  newLng.value = null
+  emit('update:routeGroups', list)
 }
 
 function updateRoutes(routes: Route[]) {
