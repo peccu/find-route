@@ -76,9 +76,9 @@ import {
   minutesToHHMM,
   getSpecifiedTime,
   getCurrentTime,
-} from '../utils'
-import type { Route, RouteResult } from '../types'
-import { simulateRoute } from '../lib/simulate'
+} from '../../utils'
+import type { Route, RouteResult } from '../../types'
+import { simulateRoute } from '../../lib/simulate'
 
 // props 定義
 const props = defineProps<{
