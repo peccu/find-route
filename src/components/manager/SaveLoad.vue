@@ -4,12 +4,12 @@
     <div class="flex gap-2">
       <button
         @click="downloadBackup"
-        class="px-3 py-2 bg-blue-600 text-white rounded"
+        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
       >
-        JSONダウンロード
+        エクスポート
       </button>
       <label class="px-3 py-2 bg-gray-200 rounded cursor-pointer">
-        JSONアップロード
+        インポート
         <input
           type="file"
           accept="application/json"
@@ -17,97 +17,76 @@
           class="hidden"
         />
       </label>
-      <button @click="resetAll" class="px-3 py-2 bg-red-500 text-white rounded">
+      <button
+        @click="resetAll"
+        class="px-3 py-2 bg-red-500 text-white rounded cursor-pointer"
+      >
         全削除
       </button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { ref, watch } from 'vue'
-import {
-  loadRouteGroups,
-  saveRouteGroups,
-  clearRoutes,
-} from '../../services/storage'
-import type { Route, RouteGroup, RouteFileV2 } from '../../types'
+<script setup lang="ts">
+import { clearRoutes } from '../../services/storage'
+import type { RouteGroup, RouteFileV2 } from '../../types'
 import { getFormattedDateTime } from '../../utils'
 
-export default {
-  props: {
-    routes: { type: Array as () => Route[], required: true },
-  },
-  emits: ['update:routes'],
-  setup() {
-    const routeGroup = ref<RouteGroup[]>(loadRouteGroups())
-    const routes = ref<Route[]>(routeGroup.value[0].routes)
+const props = defineProps<{
+  routeGroups: RouteGroup[]
+}>()
+const emit = defineEmits<{
+  (e: 'update:routeGroups', value: RouteGroup[]): void
+}>()
 
-    watch(
-      routes,
-      (r) =>
-        saveRouteGroups([
-          {
-            id: 'routegroup-000',
-            name: 'Default ',
-            routes: r,
-          },
-        ]),
-      { deep: true },
-    )
+function downloadBackup() {
+  const fileData: RouteFileV2 = {
+    version: 2,
+    groups: props.routeGroups,
+  }
+  const blob = new Blob([JSON.stringify(fileData, null, 2)], {
+    type: 'application/json',
+  })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `find_route_backup_${getFormattedDateTime()}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 
-    function downloadBackup() {
-      const fileData: RouteFileV2 = {
-        version: 2,
-        groups: [
-          {
-            id: 'routegroup_0000',
-            name: 'Default',
-            routes: routes.value,
-          },
-        ],
-      }
-      const blob = new Blob([JSON.stringify(fileData, null, 2)], {
-        type: 'application/json',
-      })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `find_route_backup_${getFormattedDateTime()}.json`
-      a.click()
-      URL.revokeObjectURL(url)
+async function onFileUpload(e: Event) {
+  const el = e.target as HTMLInputElement
+  const f = el.files?.[0]
+  if (!f) return
+  try {
+    const txt = await f.text()
+    const parsed = JSON.parse(txt)
+    if (Array.isArray(parsed)) {
+      emit('update:routeGroups', [
+        {
+          id: 'routegroup-000',
+          name: 'Default ',
+          routes: parsed,
+        },
+      ])
+      alert('リストア完了(v1)')
+    } else if (parsed.version === 2 && Array.isArray(parsed.groups)) {
+      emit('update:routeGroups', parsed.groups)
+      alert('リストア完了(v2)')
+    } else {
+      throw new Error('unsupported version')
     }
+  } catch {
+    alert('不正なJSONです')
+  } finally {
+    el.value = ''
+  }
+}
 
-    async function onFileUpload(e: Event) {
-      const el = e.target as HTMLInputElement
-      const f = el.files?.[0]
-      if (!f) return
-      try {
-        const txt = await f.text()
-        const parsed = JSON.parse(txt)
-        if (Array.isArray(parsed)) {
-          routes.value = parsed
-          alert('リストア完了(v1)')
-        } else if (parsed.version === 2 && Array.isArray(parsed.groups)) {
-          routes.value = parsed.groups[0].routes
-          alert('リストア完了(v2)')
-        } else {
-          throw new Error('unsupported version')
-        }
-      } catch {
-        alert('不正なJSONです')
-      } finally {
-        el.value = ''
-      }
-    }
-
-    function resetAll() {
-      if (!confirm('全てのルートを削除します。よろしいですか？')) return
-      routes.value = []
-      clearRoutes()
-    }
-
-    return { routes, downloadBackup, onFileUpload, resetAll }
-  },
+function resetAll() {
+  if (!confirm('全てのルートを削除します。よろしいですか？')) return
+  emit('update:routeGroups', [])
+  clearRoutes()
 }
 </script>
