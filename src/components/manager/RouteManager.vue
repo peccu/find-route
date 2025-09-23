@@ -60,49 +60,46 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import RouteEditor from './RouteEditor.vue'
 import type { Route } from '../../types'
 import { uid } from '../../utils'
 
-export default defineComponent({
-  components: { RouteEditor },
-  props: {
-    routes: { type: Array as () => Route[], required: true },
-  },
-  emits: ['update:routes'],
-  setup(props, { emit }) {
-    const creating = ref<boolean>(false)
-    const editing = ref<Route | null>(null)
+const props = defineProps<{
+  routes: Route[]
+}>()
 
-    function addRoute(r: Route) {
-      // ensure id
-      r.id = uid('route_')
-      const list = [...props.routes, r]
-      emit('update:routes', list)
-      creating.value = false
-    }
+const emit = defineEmits<{
+  (e: 'update:routes', value: Route[]): void
+}>()
 
-    function editRoute(r: Route) {
-      editing.value = JSON.parse(JSON.stringify(r))
-    }
+const creating = ref<boolean>(false)
+const editing = ref<Route | null>(null)
 
-    function updateRoute(r: Route) {
-      const list = props.routes.map((rr) => (rr.id === r.id ? r : rr))
-      emit('update:routes', list)
-      editing.value = null
-    }
+function addRoute(r: Route) {
+  // ensure id
+  r.id = uid('route_')
+  const list = [...props.routes, r]
+  emit('update:routes', list)
+  creating.value = false
+}
 
-    function removeRoute(id: string) {
-      if (!confirm('削除しますか？')) return
-      emit(
-        'update:routes',
-        props.routes.filter((r) => r.id !== id),
-      )
-    }
+function editRoute(r: Route) {
+  editing.value = JSON.parse(JSON.stringify(r))
+}
 
-    return { creating, editing, addRoute, editRoute, updateRoute, removeRoute }
-  },
-})
+function updateRoute(r: Route) {
+  const list = props.routes.map((rr) => (rr.id === r.id ? r : rr))
+  emit('update:routes', list)
+  editing.value = null
+}
+
+function removeRoute(id: string) {
+  if (!confirm('削除しますか？')) return
+  emit(
+    'update:routes',
+    props.routes.filter((r) => r.id !== id),
+  )
+}
 </script>

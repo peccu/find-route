@@ -69,8 +69,8 @@
   <!-- results -->
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, watch, computed } from 'vue'
+<script setup lang="ts">
+import { ref, watch, computed } from 'vue'
 import {
   hhmmToMinutes,
   minutesToHHMM,
@@ -80,87 +80,79 @@ import {
 import type { Route, RouteResult } from '../types'
 import { simulateRoute } from '../lib/simulate'
 
-export default defineComponent({
-  props: {
-    selectedRoutes: { type: Array as () => Route[] | null, required: true },
-  },
-  setup(props) {
-    const departureTime = ref(getCurrentTime())
-    const results = ref<RouteResult[]>([])
+// props 定義
+const props = defineProps<{
+  selectedRoutes: Route[] | null
+}>()
 
-    function selectAll(event: any) {
-      event.target.select()
+// state
+const departureTime = ref(getCurrentTime())
+const results = ref<RouteResult[]>([])
+const now = ref(new Date())
+
+// 10秒ごとに現在時刻更新
+setInterval(() => {
+  now.value = new Date()
+}, 10 * 1000)
+
+// methods
+function selectAll(event: Event) {
+  ;(event.target as HTMLInputElement).select()
+}
+
+function run() {
+  const start = hhmmToMinutes(departureTime.value)
+  if (start === null) {
+    alert('出発時刻をHH:MM形式で入力してください')
+    return
+  }
+  const res: RouteResult[] = []
+  if (props.selectedRoutes) {
+    for (const r of props.selectedRoutes) {
+      const sim = simulateRoute(r, start)
+      if (sim) res.push(sim)
     }
+  }
+  res.sort((a, b) => a.arrivalTime - b.arrivalTime)
+  results.value = res
+}
 
-    function run() {
-      const start = hhmmToMinutes(departureTime.value)
-      if (start === null) {
-        alert('出発時刻をHH:MM形式で入力してください')
-        return
-      }
-      const res: RouteResult[] = []
-      if (props.selectedRoutes) {
-        for (const r of props.selectedRoutes) {
-          const sim = simulateRoute(r, start)
-          if (sim) res.push(sim)
-        }
-      }
-      res.sort((a, b) => a.arrivalTime - b.arrivalTime)
-      results.value = res
-    }
+function format(mins: number) {
+  return minutesToHHMM(mins)
+}
 
-    function format(mins: number) {
-      return minutesToHHMM(mins)
-    }
+function isPast(time: number) {
+  return minutesToHHMM(time) < getSpecifiedTime(now.value)
+}
+function isFuture(time: number) {
+  return minutesToHHMM(time) >= getSpecifiedTime(now.value)
+}
 
-    watch(
-      () => props.selectedRoutes,
-      () => {
-        // clear results when routes change
-        results.value = []
-      },
-    )
+function timeClass(legId: string, time: number) {
+  return {
+    'bg-yellow-200 font-bold px-1 rounded':
+      nextEvent.value && nextEvent.value.includes(legId),
+    underline: isPast(time),
+    'font-bold': isFuture(time),
+  }
+}
 
-    const nextEvent = computed(() => {
-      const all = results.value.map((r) => {
-        // TODO pick departure or arrival
-        const future = r.events.filter((ev) => isFuture(ev.departure))
-        return future.length
-          ? future.sort((a, b) => a.departure - b.departure)[0]
-          : null
-      })
-      return all.filter((r) => !!r).flatMap((r) => r.legId)
-    })
-
-    const now = ref(new Date())
-    setInterval(() => {
-      now.value = new Date()
-    }, 10 * 1000)
-
-    function isPast(time: number) {
-      return minutesToHHMM(time) < getSpecifiedTime(now.value)
-    }
-    function isFuture(time: number) {
-      return minutesToHHMM(time) >= getSpecifiedTime(now.value)
-    }
-
-    function timeClass(legId: string, time: number) {
-      return {
-        'bg-yellow-200 font-bold px-1 rounded':
-          nextEvent.value && nextEvent.value.includes(legId),
-        underline: isPast(time),
-        'font-bold': isFuture(time),
-      }
-    }
-
-    return {
-      departureTime,
-      run,
-      results,
-      format,
-      timeClass,
-      selectAll,
-    }
-  },
+// computed
+const nextEvent = computed(() => {
+  const all = results.value.map((r) => {
+    const future = r.events.filter((ev) => isFuture(ev.departure))
+    return future.length
+      ? future.sort((a, b) => a.departure - b.departure)[0]
+      : null
+  })
+  return all.filter((r) => !!r).flatMap((r) => r!.legId)
 })
+
+// watch
+watch(
+  () => props.selectedRoutes,
+  () => {
+    results.value = [] // clear results when routes change
+  },
+)
 </script>

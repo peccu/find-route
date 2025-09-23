@@ -168,121 +168,112 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRaw } from 'vue'
+<script setup lang="ts">
+import { reactive, toRaw } from 'vue'
 import type { Route, Leg } from '../../types'
 import { uid, parseTimetableString } from '../../utils'
 
-export default defineComponent({
-  props: {
-    initial: { type: Object as () => Route | undefined, default: undefined },
-  },
-  emits: ['save', 'cancel'],
-  setup(props, { emit }) {
-    const form = reactive<Route>(
-      props.initial
-        ? JSON.parse(JSON.stringify(props.initial))
-        : ({
-            id: uid('route_'),
-            name: '',
-            legs: [],
-            notes: '',
-          } as Route),
-    )
+// props
+const props = defineProps<{
+  initial?: Route
+}>()
 
-    // timetableのテキスト入力を各train leg用に保持
-    const timetableInputs = reactive<string[]>(
-      form.legs.map((l) =>
-        l.type === 'train'
-          ? (l as any).timetable
-              .map((m: number) => {
-                const hh = Math.floor(m / 60)
-                  .toString()
-                  .padStart(2, '0')
-                const mm = (m % 60).toString().padStart(2, '0')
-                return `${hh}:${mm}`
-              })
-              .join(', ')
-          : '',
-      ),
-    )
+// emits
+const emit = defineEmits<{
+  (e: 'save', value: Route): void
+  (e: 'cancel'): void
+}>()
 
-    function addWalk() {
-      form.legs.push({
-        id: uid('leg_'),
-        type: 'walk',
-        durationMinutes: 0,
-      } as Leg)
-      timetableInputs.push('')
-    }
-    function addTrain() {
-      form.legs.push({
-        id: uid('leg_'),
-        type: 'train',
-        line: '',
-        from: '',
-        to: '',
-        timetable: [],
-        url: '',
-        durationMinutes: 0,
-      } as Leg)
-      timetableInputs.push('')
-    }
+// form
+const form = reactive<Route>(
+  props.initial
+    ? JSON.parse(JSON.stringify(props.initial))
+    : ({
+        id: uid('route_'),
+        name: '',
+        legs: [],
+        notes: '',
+      } as Route),
+)
 
-    const open = async (idx: number) => {
-      if (form.legs[idx].type == 'walk' || !form.legs[idx].url) {
-        return
-      }
-      window.open(form.legs[idx].url)
-    }
+// timetableのテキスト入力を各train leg用に保持
+const timetableInputs = reactive<string[]>(
+  form.legs.map((l) =>
+    l.type === 'train'
+      ? (l as any).timetable
+          .map((m: number) => {
+            const hh = Math.floor(m / 60)
+              .toString()
+              .padStart(2, '0')
+            const mm = (m % 60).toString().padStart(2, '0')
+            return `${hh}:${mm}`
+          })
+          .join(', ')
+      : '',
+  ),
+)
 
-    function removeLeg(idx: number) {
-      form.legs.splice(idx, 1)
-      timetableInputs.splice(idx, 1)
-    }
+function addWalk() {
+  form.legs.push({
+    id: uid('leg_'),
+    type: 'walk',
+    durationMinutes: 0,
+  } as Leg)
+  timetableInputs.push('')
+}
 
-    function moveUp(idx: number) {
-      if (idx <= 0) return
-      const a = form.legs.splice(idx, 1)[0]
-      form.legs.splice(idx - 1, 0, a)
-      const t = timetableInputs.splice(idx, 1)[0]
-      timetableInputs.splice(idx - 1, 0, t)
-    }
-    function moveDown(idx: number) {
-      if (idx >= form.legs.length - 1) return
-      const a = form.legs.splice(idx, 1)[0]
-      form.legs.splice(idx + 1, 0, a)
-      const t = timetableInputs.splice(idx, 1)[0]
-      timetableInputs.splice(idx + 1, 0, t)
-    }
+function addTrain() {
+  form.legs.push({
+    id: uid('leg_'),
+    type: 'train',
+    line: '',
+    from: '',
+    to: '',
+    timetable: [],
+    url: '',
+    durationMinutes: 0,
+  } as Leg)
+  timetableInputs.push('')
+}
 
-    function onSave() {
-      // parse timetable inputs into minutes
-      form.legs.forEach((leg, idx) => {
-        if ((leg as any).type === 'train') {
-          const tstr = timetableInputs[idx] ?? ''
-          ;(leg as any).timetable = parseTimetableString(tstr)
-        }
-      })
-      emit('save', JSON.parse(JSON.stringify(toRaw(form))))
-    }
+const open = async (idx: number) => {
+  if (form.legs[idx].type === 'walk' || !form.legs[idx].url) return
+  window.open(form.legs[idx].url)
+}
 
-    function selectAll(event: any) {
-      event.target.select()
-    }
+function removeLeg(idx: number) {
+  form.legs.splice(idx, 1)
+  timetableInputs.splice(idx, 1)
+}
 
-    return {
-      open,
-      form,
-      addWalk,
-      addTrain,
-      removeLeg,
-      moveUp,
-      moveDown,
-      onSave,
-      timetableInputs,
-      selectAll,
+function moveUp(idx: number) {
+  if (idx <= 0) return
+  const a = form.legs.splice(idx, 1)[0]
+  form.legs.splice(idx - 1, 0, a)
+  const t = timetableInputs.splice(idx, 1)[0]
+  timetableInputs.splice(idx - 1, 0, t)
+}
+
+function moveDown(idx: number) {
+  if (idx >= form.legs.length - 1) return
+  const a = form.legs.splice(idx, 1)[0]
+  form.legs.splice(idx + 1, 0, a)
+  const t = timetableInputs.splice(idx, 1)[0]
+  timetableInputs.splice(idx + 1, 0, t)
+}
+
+function onSave() {
+  // parse timetable inputs into minutes
+  form.legs.forEach((leg, idx) => {
+    if ((leg as any).type === 'train') {
+      const tstr = timetableInputs[idx] ?? ''
+      ;(leg as any).timetable = parseTimetableString(tstr)
     }
-  },
-})
+  })
+  emit('save', JSON.parse(JSON.stringify(toRaw(form))))
+}
+
+function selectAll(event: Event) {
+  ;(event.target as HTMLInputElement).select()
+}
 </script>
