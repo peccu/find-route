@@ -11,20 +11,22 @@
     <div class="flex items-center my-3 gap-2">
       <button
         @click="creatingGroup = true"
-        class="px-2 py-1 bg-green-500 text-white rounded"
+        class="px-2 py-1 bg-green-500 text-white rounded cursor-pointer"
       >
         グループ追加
       </button>
       <button
         v-if="selectedGroup"
         @click="removeGroup(selectedGroup.id)"
-        class="px-2 py-1 bg-red-400 text-white rounded"
+        class="px-2 py-1 bg-red-400 text-white rounded cursor-pointer"
       >
         グループ削除
       </button>
     </div>
 
-    <h2 class="text-lg font-medium mb-2">ルートグループ管理</h2>
+    <h2 class="text-lg font-medium mb-2">
+      ルートグループ管理<span class="text-sm">(自動保存)</span>
+    </h2>
 
     <!-- create group form -->
     <div v-if="creatingGroup" class="space-y-2">
@@ -64,13 +66,13 @@
       <div class="space-x-2">
         <button
           @click="addGroup"
-          class="px-3 py-1 bg-blue-500 text-white rounded"
+          class="px-3 py-1 bg-blue-500 text-white rounded cursor-pointer"
         >
           保存
         </button>
         <button
           @click="creatingGroup = false"
-          class="px-3 py-1 bg-gray-300 rounded"
+          class="px-3 py-1 bg-gray-300 rounded cursor-pointer"
         >
           キャンセル
         </button>
@@ -85,7 +87,7 @@
           v-model="selectedGroup.name"
           placeholder="グループ名"
           class="border px-2 py-1 rounded"
-        />(自動保存)
+        />
       </div>
 
       <div class="space-y-1">

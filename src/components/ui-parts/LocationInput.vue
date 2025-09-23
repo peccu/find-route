@@ -12,7 +12,7 @@
     <!-- 現在位置取得ボタン -->
     <button
       type="button"
-      class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded cursor-pointer"
       @click="insertCurrentLocation"
     >
       現在地

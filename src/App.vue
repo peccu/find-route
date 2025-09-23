@@ -5,6 +5,7 @@
     <div class="mb-4 inline-flex rounded-full bg-gray-200 p-1">
       <button
         @click="changePage('routes')"
+        class="cursor-pointer"
         :class="[
           'px-6 py-2 rounded-full transition',
           currentPage === 'routes'
@@ -16,6 +17,7 @@
       </button>
       <button
         @click="changePage('manage')"
+        class="cursor-pointer"
         :class="[
           'px-6 py-2 rounded-full transition',
           currentPage === 'manage'

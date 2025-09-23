@@ -6,7 +6,7 @@
       <!-- Select button -->
       <button
         @click="toggleDropdown"
-        class="border rounded p-2 w-full bg-white text-left flex items-center justify-between hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="border rounded p-2 w-full bg-white text-left flex items-center justify-between hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
       >
         <span :class="selectedItem ? 'text-black' : 'text-gray-500'">
           {{ selectedItem ? selectedItem[labelKey] : placeholder }}
@@ -36,7 +36,7 @@
           v-for="item in items"
           :key="String(item)"
           @click="selectItem(item)"
-          class="w-full text-left px-3 py-2 hover:bg-gray-100 flex items-center justify-between"
+          class="w-full text-left px-3 py-2 hover:bg-gray-100 flex items-center justify-between cursor-pointer"
         >
           <span>{{ item[labelKey] }}</span>
           <svg

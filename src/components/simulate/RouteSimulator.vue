@@ -1,34 +1,35 @@
 <template>
-  <div>
-    <label class="block text-sm">出発時刻 (HH:MM)</label>
-    <input
-      @focus="selectAll"
-      v-model="departureTime"
-      class="border rounded p-2 w-32"
-    />
-    <button
-      @click="run"
-      class="ml-2 px-3 py-1 bg-blue-600 text-white rounded cursor-pointer"
-    >
-      シミュレート
-    </button>
-
-    <div class="mt-2 space-x-2">
+  <div class="space-y-2">
+    <div class="space-x-2">
+      <label class="block text-sm">出発時刻 (HH:MM)</label>
+      <input
+        @focus="selectAll"
+        v-model="departureTime"
+        class="border rounded p-2 w-32"
+      />
+      <button
+        @click="run"
+        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
+      >
+        シミュレート
+      </button>
+    </div>
+    <div class="space-x-2">
       <button
         @click="add(-1)"
-        class="px-3 py-1 bg-blue-600 text-white rounded cursor-pointer"
+        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
       >
         -1min
       </button>
       <button
         @click="setNow()"
-        class="px-3 py-1 bg-blue-600 text-white rounded cursor-pointer"
+        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
       >
         now
       </button>
       <button
         @click="add(1)"
-        class="px-3 py-1 bg-blue-600 text-white rounded cursor-pointer"
+        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
       >
         +1min
       </button>
