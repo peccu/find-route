@@ -124,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import RouteManager from './RouteManager.vue'
 import LocationInput from '../ui-parts/LocationInput.vue'
 import EmbedMap from '../ui-parts/EmbedMap.vue'
@@ -138,6 +138,14 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:routeGroups', value: RouteGroup[]): void
 }>()
+
+watch(
+  () => props.routeGroups,
+  () => {
+    selectedGroup.value = null
+  },
+  { deep: true },
+)
 
 const selectedGroup = ref<RouteGroup | null>(null)
 const creatingGroup = ref(false)
