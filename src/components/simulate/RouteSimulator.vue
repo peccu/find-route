@@ -1,5 +1,4 @@
 <template>
-  <!-- simulate form -->
   <div>
     <label class="block text-sm">出発時刻 (HH:MM)</label>
     <input
@@ -13,6 +12,27 @@
     >
       シミュレート
     </button>
+
+    <div class="mt-2 space-x-2">
+      <button
+        @click="add(-1)"
+        class="px-3 py-1 bg-blue-600 text-white rounded cursor-pointer"
+      >
+        -1min
+      </button>
+      <button
+        @click="setNow()"
+        class="px-3 py-1 bg-blue-600 text-white rounded cursor-pointer"
+      >
+        now
+      </button>
+      <button
+        @click="add(1)"
+        class="px-3 py-1 bg-blue-600 text-white rounded cursor-pointer"
+      >
+        +1min
+      </button>
+    </div>
   </div>
 
   <SimulateResult :results />
@@ -21,20 +41,17 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import SimulateResult from './SimulateResult.vue'
-import { hhmmToMinutes, getCurrentTime } from '../../utils'
+import { hhmmToMinutes, getCurrentTime, minutesToHHMM } from '../../utils'
 import type { Route, RouteResult } from '../../types'
 import { simulateRoute } from '../../lib/simulate'
 
-// props 定義
 const props = defineProps<{
   selectedRoutes: Route[] | null
 }>()
 
-// state
 const departureTime = ref(getCurrentTime())
 const results = ref<RouteResult[]>([])
 
-// methods
 function selectAll(event: Event) {
   ;(event.target as HTMLInputElement).select()
 }
@@ -56,11 +73,24 @@ function run() {
   results.value = res
 }
 
-// watch
+function setNow() {
+  departureTime.value = getCurrentTime()
+}
+
+function add(plus: number) {
+  let current = hhmmToMinutes(departureTime.value)
+  if (current === null) {
+    alert('出発時刻をHH:MM形式で入力してください')
+    return
+  }
+  current += plus
+  departureTime.value = minutesToHHMM(current)
+}
+
 watch(
   () => props.selectedRoutes,
   () => {
-    results.value = [] // clear results when routes change
+    results.value = []
   },
 )
 </script>
