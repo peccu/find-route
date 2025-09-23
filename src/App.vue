@@ -32,13 +32,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import SimulatePage from './pages/SimulatePage.vue'
 import ManagePage from './pages/ManagePage.vue'
 import { loadRouteGroups } from './services/storage'
 import type { RouteGroup } from './types'
-import { onMounted, onUnmounted } from 'vue'
 import {
   checkAndUpdateVersion,
   setStoredVersion,
@@ -49,48 +48,41 @@ type Pages = 'routes' | 'manage'
 // 更新を検知した場合に、ユーザーに通知するカスタムイベント
 const updateEvent = new CustomEvent('app-update-available')
 
-export default {
-  components: { SimulatePage, ManagePage },
-  setup() {
-    const currentPage = ref<Pages>('routes')
-    const routeGroups = ref<RouteGroup[]>(loadRouteGroups())
+const currentPage = ref<Pages>('routes')
+const routeGroups = ref<RouteGroup[]>(loadRouteGroups())
 
-    function changePage(to: Pages) {
-      currentPage.value = to
-      routeGroups.value = loadRouteGroups()
-    }
-
-    let intervalId: number | null = null
-
-    const startUpdateChecker = () => {
-      intervalId = setInterval(async () => {
-        const [hasUpdate, latestVersion] = await checkAndUpdateVersion()
-        if (hasUpdate) {
-          // 更新があった場合、カスタムイベントを発火
-          window.dispatchEvent(updateEvent)
-          // ユーザーに通知してリロードを促す
-          const confirmed = confirm(
-            '新しいバージョンが利用可能です。ページをリロードしますか？',
-          )
-          if (confirmed) {
-            setStoredVersion(latestVersion)
-            window.location.reload()
-          }
-        }
-      }, 60000) // 1分ごとにチェック (調整可能)
-    }
-
-    onMounted(() => {
-      startUpdateChecker()
-    })
-
-    onUnmounted(() => {
-      if (intervalId !== null) {
-        clearInterval(intervalId)
-      }
-    })
-
-    return { currentPage, changePage, routeGroups }
-  },
+function changePage(to: Pages) {
+  currentPage.value = to
+  routeGroups.value = loadRouteGroups()
 }
+
+let intervalId: number | null = null
+
+const startUpdateChecker = () => {
+  intervalId = setInterval(async () => {
+    const [hasUpdate, latestVersion] = await checkAndUpdateVersion()
+    if (hasUpdate) {
+      // 更新があった場合、カスタムイベントを発火
+      window.dispatchEvent(updateEvent)
+      // ユーザーに通知してリロードを促す
+      const confirmed = confirm(
+        '新しいバージョンが利用可能です。ページをリロードしますか？',
+      )
+      if (confirmed) {
+        setStoredVersion(latestVersion)
+        window.location.reload()
+      }
+    }
+  }, 60000) // 1分ごとにチェック (調整可能)
+}
+
+onMounted(() => {
+  startUpdateChecker()
+})
+
+onUnmounted(() => {
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+  }
+})
 </script>
