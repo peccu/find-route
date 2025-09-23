@@ -9,8 +9,8 @@
       value-key="name"
       label="経路グループを選択"
       placeholder="選択してください"
+      :initial-select="initialRouteGroup"
     />
-    :initial-select="initialRouteGroup"
 
     <RouteSimulator v-model:selectedRoutes="selectedRoutes" />
   </div>
