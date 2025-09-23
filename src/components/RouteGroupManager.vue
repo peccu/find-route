@@ -89,25 +89,27 @@
       </div>
 
       <div class="space-y-1">
-        <div>位置設定</div>
+        <div>
+          位置設定
+          <a
+            v-if="selectedGroup.lat"
+            target="_blank"
+            class="underline text-blue-800"
+            :href="`https://maps.google.com/?q=(${selectedGroup.lat}, ${selectedGroup.lng})`"
+            >Google Mapsで確認</a
+          >
+          <a
+            v-else
+            target="_blank"
+            class="underline text-blue-800"
+            href="https://maps.google.com/"
+            >Google Mapsで探す</a
+          >
+        </div>
         <LocationInput
           v-model:modelValueLat="selectedGroup.lat"
           v-model:modelValueLng="selectedGroup.lng"
         />
-        <a
-          v-if="selectedGroup.lat"
-          target="_blank"
-          class="underline text-blue-800"
-          :href="`https://maps.google.com/?q=(${selectedGroup.lat}, ${selectedGroup.lng})`"
-          >Google Mapsで確認</a
-        >
-        <a
-          v-else
-          target="_blank"
-          class="underline text-blue-800"
-          href="https://maps.google.com/"
-          >Google Mapsで探す</a
-        >
       </div>
 
       <RouteManager
