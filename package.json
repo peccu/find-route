@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-version.js && vue-tsc -b && vite build",
+    "format": "npx prettier . --write",
+    "bump-version": "node scripts/generate-version.js",
+    "build": "npm run bump-version && vue-tsc -b && vite build",
+    "format-build": "npm run format && npm run build",
+    "watch-build": "watchexec -e js,ts,vue npm run format-build",
     "preview": "vite preview",
     "generate-version": "node scripts/generate-version.js"
   },
