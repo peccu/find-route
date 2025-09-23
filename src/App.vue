@@ -58,25 +58,29 @@ function changePage(to: Pages) {
 
 let intervalId: number | null = null
 
+const checkAndUpdate = async () => {
+  const [hasUpdate, latestVersion] = await checkAndUpdateVersion()
+  if (!hasUpdate) {
+    return
+  }
+  // 更新があった場合、カスタムイベントを発火
+  window.dispatchEvent(updateEvent)
+  // ユーザーに通知してリロードを促す
+  const confirmed = confirm(
+    '新しいバージョンが利用可能です。ページをリロードしますか？',
+  )
+  if (confirmed) {
+    setStoredVersion(latestVersion)
+    window.location.reload()
+  }
+}
+
 const startUpdateChecker = () => {
-  intervalId = setInterval(async () => {
-    const [hasUpdate, latestVersion] = await checkAndUpdateVersion()
-    if (hasUpdate) {
-      // 更新があった場合、カスタムイベントを発火
-      window.dispatchEvent(updateEvent)
-      // ユーザーに通知してリロードを促す
-      const confirmed = confirm(
-        '新しいバージョンが利用可能です。ページをリロードしますか？',
-      )
-      if (confirmed) {
-        setStoredVersion(latestVersion)
-        window.location.reload()
-      }
-    }
-  }, 60000) // 1分ごとにチェック (調整可能)
+  intervalId = setInterval(checkAndUpdate, 60000) // 1分ごとにチェック (調整可能)
 }
 
 onMounted(() => {
+  checkAndUpdate()
   startUpdateChecker()
 })
 
