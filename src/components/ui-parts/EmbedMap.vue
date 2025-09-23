@@ -17,7 +17,7 @@
 
 <script setup lang="ts" generic="T">
 import { ref, watch } from 'vue'
-import { mapUrl } from '../lib/map.ts'
+import { mapUrl } from '../../lib/map.ts'
 
 interface Props {
   lat?: number | null
