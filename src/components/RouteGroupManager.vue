@@ -110,6 +110,8 @@
           v-model:modelValueLat="selectedGroup.lat"
           v-model:modelValueLng="selectedGroup.lng"
         />
+
+        <EmbedMap :lat="selectedGroup.lat" :lng="selectedGroup.lng" />
       </div>
 
       <RouteManager
@@ -125,6 +127,7 @@
 import { ref } from 'vue'
 import RouteManager from './RouteManager.vue'
 import LocationInput from './LocationInput.vue'
+import EmbedMap from './EmbedMap.vue'
 import CustomSelector from '../components/CustomSelector.vue'
 import type { RouteGroup, Route } from '../types'
 import { uid } from '../utils'
