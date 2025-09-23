@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue"
-import { LocationService } from "../services/location-service"
+import { ref, watch } from 'vue'
+import { LocationService } from '../services/location-service'
 
 interface Props {
   modelValueLat: number | null
@@ -31,12 +31,12 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  (e: "update:modelValueLat", value: number | null): void
-  (e: "update:modelValueLng", value: number | null): void
+  (e: 'update:modelValueLat', value: number | null): void
+  (e: 'update:modelValueLng', value: number | null): void
 }>()
 
 // 入力欄に表示するテキスト
-const textValue = ref<string>("")
+const textValue = ref<string>('')
 
 // 親から値が来たら同期
 watch(
@@ -45,27 +45,29 @@ watch(
     if (lat != null && lng != null) {
       textValue.value = `(${lat}, ${lng})`
     } else {
-      textValue.value = ""
+      textValue.value = ''
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 // 入力をパースして親へ反映
 function onInputChange() {
-  const match = textValue.value.match(/^\s*\(?\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\)?\s*$/)
+  const match = textValue.value.match(
+    /^\s*\(?\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\)?\s*$/,
+  )
   if (match) {
     const lat = parseFloat(match[1])
     const lng = parseFloat(match[2])
     if (!isNaN(lat) && !isNaN(lng)) {
-      emit("update:modelValueLat", lat)
-      emit("update:modelValueLng", lng)
+      emit('update:modelValueLat', lat)
+      emit('update:modelValueLng', lng)
       return
     }
   }
   // パースできない場合は null
-  emit("update:modelValueLat", null)
-  emit("update:modelValueLng", null)
+  emit('update:modelValueLat', null)
+  emit('update:modelValueLng', null)
 }
 
 // ボタンクリックで現在地を取得
@@ -73,10 +75,10 @@ async function insertCurrentLocation() {
   const pos = await LocationService.getCurrentPosition()
   if (pos) {
     textValue.value = `(${pos.lat}, ${pos.lng})`
-    emit("update:modelValueLat", pos.lat)
-    emit("update:modelValueLng", pos.lng)
+    emit('update:modelValueLat', pos.lat)
+    emit('update:modelValueLng', pos.lng)
   } else {
-    alert("位置情報を取得できませんでした。")
+    alert('位置情報を取得できませんでした。')
   }
 }
 </script>

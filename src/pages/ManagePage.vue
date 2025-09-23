@@ -4,33 +4,58 @@
     <div class="bg-white p-4 rounded shadow">
       <h2 class="font-medium mb-2">バックアップ / リストア</h2>
       <div class="flex gap-2">
-        <button @click="downloadBackup" class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer">エクスポート</button>
+        <button
+          @click="downloadBackup"
+          class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
+        >
+          エクスポート
+        </button>
         <label class="px-3 py-2 bg-gray-200 rounded cursor-pointer">
           インポート
-          <input type="file" accept="application/json" @change="onFileUpload" class="hidden" />
+          <input
+            type="file"
+            accept="application/json"
+            @change="onFileUpload"
+            class="hidden"
+          />
         </label>
-        <button @click="resetAll" class="px-3 py-2 bg-red-500 text-white rounded cursor-pointer">全削除</button>
+        <button
+          @click="resetAll"
+          class="px-3 py-2 bg-red-500 text-white rounded cursor-pointer"
+        >
+          全削除
+        </button>
       </div>
     </div>
-    <p class="mt-6 text-sm text-gray-500">メモ: データはローカルストレージに保存されます。</p>
+    <p class="mt-6 text-sm text-gray-500">
+      メモ: データはローカルストレージに保存されます。
+    </p>
   </div>
 </template>
 
 <script lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'
 import RouteGroupManager from '../components/RouteGroupManager.vue'
-import { loadRouteGroups, saveRouteGroups, clearRoutes } from '../services/storage'
+import {
+  loadRouteGroups,
+  saveRouteGroups,
+  clearRoutes,
+} from '../services/storage'
 import type { RouteGroup, RouteFileV2 } from '../types'
 import { getFormattedDateTime } from '../utils'
 
 export default {
   components: { RouteGroupManager },
   setup() {
-    const routeGroups = ref<RouteGroup[]>(loadRouteGroups());
+    const routeGroups = ref<RouteGroup[]>(loadRouteGroups())
 
-    watch(routeGroups, (r) => {
-      saveRouteGroups(r)
-    }, { deep: true })
+    watch(
+      routeGroups,
+      (r) => {
+        saveRouteGroups(r)
+      },
+      { deep: true },
+    )
 
     function downloadBackup() {
       const fileData: RouteFileV2 = {
@@ -55,12 +80,14 @@ export default {
       try {
         const txt = await f.text()
         const parsed = JSON.parse(txt)
-        if (Array.isArray(parsed)){
-          routeGroups.value = [{
-            id: 'routegroup-000',
-            name: 'Default ',
-            routes: parsed
-          }];
+        if (Array.isArray(parsed)) {
+          routeGroups.value = [
+            {
+              id: 'routegroup-000',
+              name: 'Default ',
+              routes: parsed,
+            },
+          ]
           alert('リストア完了(v1)')
         } else if (parsed.version === 2 && Array.isArray(parsed.groups)) {
           routeGroups.value = parsed.groups
@@ -82,6 +109,6 @@ export default {
     }
 
     return { routeGroups, downloadBackup, onFileUpload, resetAll }
-  }
+  },
 }
 </script>

@@ -1,6 +1,9 @@
 import type { Event, Route, RouteResult } from '../types'
 
-export function simulateRoute(route: Route, startTime: number): RouteResult | null {
+export function simulateRoute(
+  route: Route,
+  startTime: number,
+): RouteResult | null {
   let currentTime = startTime
   const events: Event[] = []
 
@@ -8,11 +11,17 @@ export function simulateRoute(route: Route, startTime: number): RouteResult | nu
     if (leg.type === 'walk') {
       const departure = currentTime
       const arrival = currentTime + leg.durationMinutes
-      events.push({ legId: leg.id, legType: 'walk', departure, durationMinutes: leg.durationMinutes, arrival })
+      events.push({
+        legId: leg.id,
+        legType: 'walk',
+        departure,
+        durationMinutes: leg.durationMinutes,
+        arrival,
+      })
       currentTime = arrival
     } else {
       // find first timetable departure >= currentTime
-      const t = leg.timetable.find(t => t >= (currentTime % (24 * 60)))
+      const t = leg.timetable.find((t) => t >= currentTime % (24 * 60))
       if (t === undefined) {
         // approach: also allow next-day trains by taking first entry + 24h
         if (leg.timetable.length === 0) return null
@@ -27,7 +36,7 @@ export function simulateRoute(route: Route, startTime: number): RouteResult | nu
           legTo: leg.to,
           departure,
           durationMinutes: leg.durationMinutes,
-          arrival
+          arrival,
         })
         currentTime = arrival
       } else {
@@ -44,12 +53,18 @@ export function simulateRoute(route: Route, startTime: number): RouteResult | nu
           legTo: leg.to,
           departure,
           durationMinutes: leg.durationMinutes,
-          arrival
+          arrival,
         })
         currentTime = arrival
       }
     }
   }
 
-  return { routeId: route.id, routeName: route.name, routeNote: route.notes, arrivalTime: currentTime, events }
+  return {
+    routeId: route.id,
+    routeName: route.name,
+    routeNote: route.notes,
+    arrivalTime: currentTime,
+    events,
+  }
 }

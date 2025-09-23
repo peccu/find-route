@@ -8,8 +8,8 @@
         :class="[
           'px-6 py-2 rounded-full transition',
           currentPage === 'routes'
-          ? 'bg-blue-500 text-white shadow'
-          : 'text-gray-600 hover:bg-gray-300'
+            ? 'bg-blue-500 text-white shadow'
+            : 'text-gray-600 hover:bg-gray-300',
         ]"
       >
         経路検索
@@ -19,8 +19,8 @@
         :class="[
           'px-6 py-2 rounded-full transition',
           currentPage === 'manage'
-          ? 'bg-blue-500 text-white shadow'
-          : 'text-gray-600 hover:bg-gray-300'
+            ? 'bg-blue-500 text-white shadow'
+            : 'text-gray-600 hover:bg-gray-300',
         ]"
       >
         ルート管理
@@ -34,59 +34,63 @@
 
 <script lang="ts">
 import { ref } from 'vue'
-import SimulatePage from './pages/SimulatePage.vue';
-import ManagePage from './pages/ManagePage.vue';
+import SimulatePage from './pages/SimulatePage.vue'
+import ManagePage from './pages/ManagePage.vue'
 import { loadRouteGroups } from './services/storage'
 import type { RouteGroup } from './types'
-import { onMounted, onUnmounted } from 'vue';
-import { checkAndUpdateVersion, setStoredVersion } from './services/version-checker';
+import { onMounted, onUnmounted } from 'vue'
+import {
+  checkAndUpdateVersion,
+  setStoredVersion,
+} from './services/version-checker'
 
-
-type Pages = 'routes' | 'manage';
+type Pages = 'routes' | 'manage'
 
 // 更新を検知した場合に、ユーザーに通知するカスタムイベント
-const updateEvent = new CustomEvent('app-update-available');
+const updateEvent = new CustomEvent('app-update-available')
 
 export default {
-  components: {SimulatePage, ManagePage},
+  components: { SimulatePage, ManagePage },
   setup() {
-    const currentPage = ref<Pages>('routes');
-    const routeGroups = ref<RouteGroup[]>(loadRouteGroups());
+    const currentPage = ref<Pages>('routes')
+    const routeGroups = ref<RouteGroup[]>(loadRouteGroups())
 
     function changePage(to: Pages) {
-      currentPage.value = to;
-      routeGroups.value = loadRouteGroups();
+      currentPage.value = to
+      routeGroups.value = loadRouteGroups()
     }
 
-    let intervalId: number | null = null;
+    let intervalId: number | null = null
 
     const startUpdateChecker = () => {
       intervalId = setInterval(async () => {
-        const [hasUpdate, latestVersion] = await checkAndUpdateVersion();
+        const [hasUpdate, latestVersion] = await checkAndUpdateVersion()
         if (hasUpdate) {
           // 更新があった場合、カスタムイベントを発火
-          window.dispatchEvent(updateEvent);
+          window.dispatchEvent(updateEvent)
           // ユーザーに通知してリロードを促す
-          const confirmed = confirm('新しいバージョンが利用可能です。ページをリロードしますか？');
+          const confirmed = confirm(
+            '新しいバージョンが利用可能です。ページをリロードしますか？',
+          )
           if (confirmed) {
-            setStoredVersion(latestVersion);
-            window.location.reload();
+            setStoredVersion(latestVersion)
+            window.location.reload()
           }
         }
-      }, 60000); // 1分ごとにチェック (調整可能)
-    };
+      }, 60000) // 1分ごとにチェック (調整可能)
+    }
 
     onMounted(() => {
-      startUpdateChecker();
-    });
+      startUpdateChecker()
+    })
 
     onUnmounted(() => {
       if (intervalId !== null) {
-        clearInterval(intervalId);
+        clearInterval(intervalId)
       }
-    });
+    })
 
     return { currentPage, changePage, routeGroups }
-  }
+  },
 }
 </script>
