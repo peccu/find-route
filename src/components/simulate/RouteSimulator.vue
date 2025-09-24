@@ -17,7 +17,7 @@
     <div class="space-x-2">
       <button
         @click="add(-1)"
-        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
+        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer touch-manipulation"
       >
         -1min
       </button>
@@ -29,7 +29,7 @@
       </button>
       <button
         @click="add(1)"
-        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer"
+        class="px-3 py-2 bg-blue-600 text-white rounded cursor-pointer touch-manipulation"
       >
         +1min
       </button>
