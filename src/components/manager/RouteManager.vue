@@ -79,7 +79,9 @@ const creating = ref<boolean>(false)
 const editing = ref<Route | null>(null)
 
 const hasNotimetableLeg = (r: Route) => {
-  return r.id !== '' || true;
+  const trainLegs = r.legs.filter(l => l.type ==="train");
+  const hasNoTimetable = trainLegs.some(leg=>leg.timetable.length>0)
+  return hasNoTimetable;
 }
 
 function addRoute(r: Route) {
