@@ -16,7 +16,7 @@
           <div class="text-sm text-gray-600">
             {{ r.legs.length }}区間 · {{ r.notes ?? '' }}
           </div>
-          <div v-if="hasNotimetableLeg(r)" class="text-red-600">時刻表未登録の区間があります</div>
+          <div v-if="hasNoTimetableLeg(r)" class="text-red-600">時刻表未登録の区間があります</div>
         </div>
         <div class="flex gap-2">
           <button
@@ -78,9 +78,9 @@ const emit = defineEmits<{
 const creating = ref<boolean>(false)
 const editing = ref<Route | null>(null)
 
-const hasNotimetableLeg = (r: Route) => {
+const hasNoTimetableLeg = (r: Route) => {
   const trainLegs = r.legs.filter(l => l.type ==="train");
-  const hasNoTimetable = trainLegs.some(leg=>leg.timetable.length>0)
+  const hasNoTimetable = trainLegs.some(leg=>leg.timetable.length===0)
   return hasNoTimetable;
 }
 
